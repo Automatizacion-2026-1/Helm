@@ -1,0 +1,32 @@
+name: Helm Chart Validation
+
+on:
+  push:
+    paths:
+      - 'helm/**'
+  pull_request:
+    paths:
+      - 'helm/**'
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: 'latest'
+
+      - name: Lint Frontend Chart
+        run: helm lint helm/charts/frontend
+
+      - name: Lint Backend Chart
+        run: helm lint helm/charts/backend
+
+      - name: Dry Run (Simulación)
+        run: |
+          helm install --dry-run --debug test-release ./helm/charts/frontend
+          helm install --dry-run --debug test-release ./helm/charts/backend

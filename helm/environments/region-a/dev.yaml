@@ -1,0 +1,12 @@
+# Configuración específica para Región A - DEV
+global:
+  region: "eastus"
+  acr: "acruksdev01.azurecr.io"
+
+frontend:
+  replicaCount: 2
+  resources:
+    limits: { cpu: 100m, memory: 128Mi }
+
+backend:
+  replicaCount: 2

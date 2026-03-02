@@ -1,0 +1,14 @@
+apiVersion: v2
+name: project-umbrella
+version: 0.1.0
+dependencies:
+  - name: frontend
+    version: 0.1.0
+    repository: "file://charts/frontend"
+  - name: backend
+    version: 0.1.0
+    repository: "file://charts/backend"
+  - name: gateway
+    version: 0.1.0
+    repository: "file://charts/gateway"
+    condition: gateway.enabled # Permite que el otro dev lo active luego
