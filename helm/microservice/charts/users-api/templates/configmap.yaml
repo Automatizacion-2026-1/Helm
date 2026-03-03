@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: users-api-config
+  namespace: microservices
+  labels:
+    app: users-api
+    component: backend
+    tier: data
+data:
+  # Puerto del servidor
+  SERVER_PORT: {{ .Values.config.serverPort }}
+  
+  # Configuración de Spring Boot Application
+  SPRING_APPLICATION_NAME: {{ .Values.config.springApplicationName }}
+  
+  # Configuración de Zipkin (Spring Cloud Sleuth)
+  SPRING_ZIPKIN_BASEURL: {{ .Values.config.springZipkinBaseUrl }}
+  SPRING_SLEUTH_SAMPLER_PROBABILITY: {{ .Values.config.springSleuthSamplerProbability }}
+  
+  # Configuración de H2 Database (base de datos en memoria)
+  SPRING_DATASOURCE_URL: {{ .Values.config.springDatasourceUrl }}
+  SPRING_DATASOURCE_DRIVER_CLASS_NAME: {{ .Values.config.springDatasourceDriverClassName }}
+  SPRING_DATASOURCE_USERNAME: {{ .Values.config.springDatasourceUsername }}
+  SPRING_DATASOURCE_PASSWORD: {{ .Values.config.springDatasourcePassword }}
+  
+  # Configuración de JPA/Hibernate
+  SPRING_JPA_DATABASE_PLATFORM: {{ .Values.config.springJpaDatabasePlatform }}
+  SPRING_JPA_HIBERNATE_DDL_AUTO: {{ .Values.config.springJpaHibernateDdlAuto }}
+  SPRING_JPA_SHOW_SQL: {{ .Values.config.springJpaShowSql }}
+  
+  # Configuración de H2 Console (deshabilitado en producción)
+  SPRING_H2_CONSOLE_ENABLED: {{ .Values.config.springH2ConsoleEnabled }}
+  
+  # Configuración de logging
+  LOGGING_LEVEL_ROOT: {{ .Values.config.loggingLevelRoot }}
+  LOGGING_LEVEL_COM_ELGRIS: {{ .Values.config.loggingLevelComElgris }}

@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: todos-api-config
+  namespace: microservices
+  labels:
+    app: todos-api
+    component: backend
+    tier: application
+data:
+  # Puerto del servicio
+  TODO_API_PORT: {{ .Values.config.todoApiPort }}
+  
+  # Configuración de Redis para Pub/Sub
+  REDIS_HOST: {{ .Values.config.redisHost }}
+  REDIS_PORT: {{ .Values.config.redisPort }}
+  REDIS_CHANNEL: {{ .Values.config.redisChannel }}
+  
+  # URL de Zipkin para distributed tracing
+  ZIPKIN_URL: {{ .Values.config.zipkinUrl }}
+  
+  # Configuración de Node.js
+  NODE_ENV: {{ .Values.config.nodeEnv }}
+  
+  # Nombre del servicio para Zipkin tracing
+  SERVICE_NAME: {{ .Values.config.serviceName }}
+  
+  # Configuración de Express JWT
+  # El secret se toma del Secret jwt-secret
+  
+  # Configuración de logging
+  LOG_LEVEL: {{ .Values.config.logLevel }}
+  
+  # Configuración de Zipkin Context (CLS)
+  ZIPKIN_CONTEXT: {{ .Values.config.zipkinContext }}
