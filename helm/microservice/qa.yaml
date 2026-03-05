@@ -1,0 +1,37 @@
+# Configuración para ambiente QA
+
+# Configuración global para todos los subcharts
+global:
+  namespace: microservices-qa
+
+# Configuración específica para auth-api
+auth-api:
+  replicaCount: 2
+  global:
+    namespace: microservices-qa
+  image:
+    tag: qa
+
+# Configuración específica para todos-api
+todos-api:
+  replicaCount: 2
+  global:
+    namespace: microservices-qa
+  image:
+    tag: qa
+
+# Configuración específica para users-api
+users-api:
+  replicaCount: 2
+  global:
+    namespace: microservices-qa
+  image:
+    tag: qa
+
+# Configuración específica para log-message-processor
+log-message-processor:
+  replicaCount: 2
+  global:
+    namespace: microservices-qa
+  image:
+    tag: qa

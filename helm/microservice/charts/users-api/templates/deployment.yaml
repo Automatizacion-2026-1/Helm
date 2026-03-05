@@ -1,0 +1,51 @@
+---
+# Deployment para Users API (Spring Boot/Java)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Values.labels.app }}
+    component: {{ .Values.labels.component }}
+    tier: {{ .Values.labels.tier }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.labels.app }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.labels.app }}
+        component: {{ .Values.labels.component }}
+        tier: {{ .Values.labels.tier }}
+    spec:
+      serviceAccountName: microservices-sa
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.port }}
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            cpu: {{ .Values.resources.requests.cpu }}
+            memory: {{ .Values.resources.requests.memory }}
+          limits:
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
+        # Variables de entorno desde ConfigMap
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name }}-{{ .Chart.Name }}-config
+        # JWT Secret desde Secret
+        env:
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jwt-secret
+              key: JWT_SECRET
+

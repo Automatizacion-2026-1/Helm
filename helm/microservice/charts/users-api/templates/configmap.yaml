@@ -1,37 +1,31 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: users-api-config
-  namespace: microservices
+  name: {{ .Release.Name }}-{{ .Chart.Name }}-config
+  namespace: {{ .Values.global.namespace }}
   labels:
-    app: users-api
-    component: backend
-    tier: data
+    app: {{ .Values.labels.app }}
+    component: {{ .Values.labels.component }}
+    tier: {{ .Values.labels.tier }}
 data:
   # Puerto del servidor
-  SERVER_PORT: {{ .Values.config.serverPort }}
-  
+  SERVER_PORT: {{ .Values.config.serverPort | quote }}
   # Configuración de Spring Boot Application
-  SPRING_APPLICATION_NAME: {{ .Values.config.springApplicationName }}
-  
+  SPRING_APPLICATION_NAME: {{ .Values.config.springApplicationName | quote }}
   # Configuración de Zipkin (Spring Cloud Sleuth)
-  SPRING_ZIPKIN_BASEURL: {{ .Values.config.springZipkinBaseUrl }}
-  SPRING_SLEUTH_SAMPLER_PROBABILITY: {{ .Values.config.springSleuthSamplerProbability }}
-  
+  SPRING_ZIPKIN_BASEURL: {{ .Values.config.springZipkinBaseUrl | quote }}
+  SPRING_SLEUTH_SAMPLER_PROBABILITY: {{ .Values.config.springSleuthSamplerProbability | quote }}
   # Configuración de H2 Database (base de datos en memoria)
-  SPRING_DATASOURCE_URL: {{ .Values.config.springDatasourceUrl }}
-  SPRING_DATASOURCE_DRIVER_CLASS_NAME: {{ .Values.config.springDatasourceDriverClassName }}
-  SPRING_DATASOURCE_USERNAME: {{ .Values.config.springDatasourceUsername }}
-  SPRING_DATASOURCE_PASSWORD: {{ .Values.config.springDatasourcePassword }}
-  
+  SPRING_DATASOURCE_URL: {{ .Values.config.springDatasourceUrl | quote }}
+  SPRING_DATASOURCE_DRIVER_CLASS_NAME: {{ .Values.config.springDatasourceDriverClassName | quote }}
+  SPRING_DATASOURCE_USERNAME: {{ .Values.config.springDatasourceUsername | quote }}
+  SPRING_DATASOURCE_PASSWORD: {{ .Values.config.springDatasourcePassword | quote }}
   # Configuración de JPA/Hibernate
-  SPRING_JPA_DATABASE_PLATFORM: {{ .Values.config.springJpaDatabasePlatform }}
-  SPRING_JPA_HIBERNATE_DDL_AUTO: {{ .Values.config.springJpaHibernateDdlAuto }}
-  SPRING_JPA_SHOW_SQL: {{ .Values.config.springJpaShowSql }}
-  
+  SPRING_JPA_DATABASE_PLATFORM: {{ .Values.config.springJpaDatabasePlatform | quote }}
+  SPRING_JPA_HIBERNATE_DDL_AUTO: {{ .Values.config.springJpaHibernateDdlAuto | quote }}
+  SPRING_JPA_SHOW_SQL: {{ .Values.config.springJpaShowSql | quote }}
   # Configuración de H2 Console (deshabilitado en producción)
-  SPRING_H2_CONSOLE_ENABLED: {{ .Values.config.springH2ConsoleEnabled }}
-  
+  SPRING_H2_CONSOLE_ENABLED: {{ .Values.config.springH2ConsoleEnabled | quote }}
   # Configuración de logging
-  LOGGING_LEVEL_ROOT: {{ .Values.config.loggingLevelRoot }}
-  LOGGING_LEVEL_COM_ELGRIS: {{ .Values.config.loggingLevelComElgris }}
+  LOGGING_LEVEL_ROOT: {{ .Values.config.loggingLevelRoot | quote }}
+  LOGGING_LEVEL_COM_ELGRIS: {{ .Values.config.loggingLevelComElgris | quote }}

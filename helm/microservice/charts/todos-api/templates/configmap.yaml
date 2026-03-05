@@ -1,35 +1,26 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: todos-api-config
-  namespace: microservices
+  name: {{ .Release.Name }}-{{ .Chart.Name }}-config
+  namespace: {{ .Values.global.namespace }}
   labels:
-    app: todos-api
-    component: backend
-    tier: application
+    app: {{ .Values.labels.app }}
+    component: {{ .Values.labels.component }}
+    tier: {{ .Values.labels.tier }}
 data:
   # Puerto del servicio
-  TODO_API_PORT: {{ .Values.config.todoApiPort }}
-  
+  TODO_API_PORT: {{ .Values.config.todoApiPort | quote }}
   # Configuración de Redis para Pub/Sub
-  REDIS_HOST: {{ .Values.config.redisHost }}
-  REDIS_PORT: {{ .Values.config.redisPort }}
-  REDIS_CHANNEL: {{ .Values.config.redisChannel }}
-  
+  REDIS_HOST: {{ .Values.config.redisHost | quote }}
+  REDIS_PORT: {{ .Values.config.redisPort | quote }}
+  REDIS_CHANNEL: {{ .Values.config.redisChannel | quote }}
   # URL de Zipkin para distributed tracing
-  ZIPKIN_URL: {{ .Values.config.zipkinUrl }}
-  
+  ZIPKIN_URL: {{ .Values.config.zipkinUrl | quote }}
   # Configuración de Node.js
-  NODE_ENV: {{ .Values.config.nodeEnv }}
-  
+  NODE_ENV: {{ .Values.config.nodeEnv | quote }}
   # Nombre del servicio para Zipkin tracing
-  SERVICE_NAME: {{ .Values.config.serviceName }}
-  
-  # Configuración de Express JWT
-  # El secret se toma del Secret jwt-secret
-  
+  SERVICE_NAME: {{ .Values.config.serviceName | quote }}
   # Configuración de logging
-  LOG_LEVEL: {{ .Values.config.logLevel }}
-  
+  LOG_LEVEL: {{ .Values.config.logLevel | quote }}
   # Configuración de Zipkin Context (CLS)
-  ZIPKIN_CONTEXT: {{ .Values.config.zipkinContext }}
+  ZIPKIN_CONTEXT: {{ .Values.config.zipkinContext | quote }}

@@ -1,25 +1,20 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: auth-api-config
-  namespace: microservices
+  name: {{ .Release.Name }}-{{ .Chart.Name }}-config
+  namespace: {{ .Values.global.namespace }}
   labels:
-    app: auth-api
-    component: backend
-    tier: authentication
+    app: {{ .Values.labels.app }}
+    component: {{ .Values.labels.component }}
+    tier: {{ .Values.labels.tier }}
 data:
   # Puerto del servicio
-  AUTH_API_PORT: {{ .Values.config.authApiPort }}
-  
+  AUTH_API_PORT: {{ .Values.config.authApiPort | quote }}
   # URL del servicio de usuarios interno
-  USERS_API_ADDRESS: {{ .Values.config.usersApiAddress }}
-  
+  USERS_API_ADDRESS: {{ .Values.config.usersApiAddress | quote }}
   # URL de Zipkin para distributed tracing
-  ZIPKIN_URL: {{ .Values.config.zipkinUrl }}
-  
+  ZIPKIN_URL: {{ .Values.config.zipkinUrl | quote }}
   # Nombre del servicio para tracing
-  SERVICE_NAME: {{ .Values.config.serviceName }}
-  
+  SERVICE_NAME: {{ .Values.config.serviceName | quote }}
   # Usuarios permitidos (formato: username_password)
-  # Estos son hashes simples para demo - en producción usar bcrypt
-  ALLOWED_USER_HASHES: {{ .Values.config.allowedUserHashes }}
+  ALLOWED_USER_HASHES: {{ .Values.config.allowedUserHashes | quote }}

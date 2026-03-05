@@ -1,0 +1,19 @@
+# Service para Log Message Processor
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Values.labels.app }}
+    component: {{ .Values.labels.component }}
+    tier: {{ .Values.labels.tier }}
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Values.labels.app }}
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: http
