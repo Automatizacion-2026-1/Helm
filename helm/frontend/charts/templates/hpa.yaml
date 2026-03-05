@@ -1,32 +1,111 @@
+---
+# Deployment para Frontend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Values.labels.app }}
+    component: {{ .Values.labels.component }}
+    tier: {{ .Values.labels.tier }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.labels.app }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.labels.app }}
+        component: {{ .Values.labels.component }}
+        tier: {{ .Values.labels.tier }}
+    spec:
+      serviceAccountName: microservices-sa
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            cpu: {{ .Values.resources.requests.cpu }}
+            memory: {{ .Values.resources.requests.memory }}
+          limits:
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: nginx.conf
+          readOnly: true
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: {{ .Release.Name }}-{{ .Chart.Name }}-config
+          items:
+            - key: nginx.conf
+              path: nginx.conf
+
+---
+# Service para Frontend
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Values.labels.app }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - port: {{ .Values.service.port }}
+    targetPort: 80
+    protocol: TCP
+    name: http
+  selector:
+    app: {{ .Values.labels.app }}
+
+---
+# HorizontalPodAutoscaler para Frontend
+{{- if .Values.hpa.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: frontend-hpa
-  namespace: microservices
+  name: {{ .Release.Name }}-{{ .Chart.Name }}-hpa
+  namespace: {{ .Values.global.namespace }}
   labels:
-    app: frontend
-    component: frontend
-    tier: presentation
+    app: {{ .Values.labels.app }}
+    component: {{ .Values.labels.component }}
+    tier: {{ .Values.labels.tier }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: frontend
-  minReplicas: 1
-  maxReplicas: 3
+    name: {{ .Release.Name }}-{{ .Chart.Name }}
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
   metrics:
   - type: Resource
     resource:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 20
+        averageUtilization: {{ .Values.hpa.targetCPUUtilizationPercentage }}
   - type: Resource
     resource:
       name: memory
       target:
         type: Utilization
-        averageUtilization: 20
+        averageUtilization: {{ .Values.hpa.targetMemoryUtilizationPercentage }}
   behavior:
     scaleDown:
       stabilizationWindowSeconds: 300
@@ -48,3 +127,4 @@ spec:
         value: 4
         periodSeconds: 30
       selectPolicy: Max
+{{- end }}

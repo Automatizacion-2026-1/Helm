@@ -1,0 +1,46 @@
+# Configuración global
+global:
+  namespace: microservices
+
+# Configuración de la imagen
+image:
+  repository: frontend
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+
+# Configuración del servicio
+service:
+  type: LoadBalancer
+  port: 80
+
+# Recursos del contenedor
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "80m"
+  limits:
+    memory: "128Mi"
+    cpu: "80m"
+
+# Réplicas
+replicaCount: 1
+
+# HPA configuración
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 20
+  targetMemoryUtilizationPercentage: 20
+
+# Labels
+labels:
+  app: frontend
+  component: frontend
+  tier: presentation
+
+# Configuración de nginx proxy
+config:
+  authApiUrl: "http://auth-api.microservices.svc.cluster.local:8081"
+  todosApiUrl: "http://todos-api.microservices.svc.cluster.local:8082"
+  zipkinUrl: "http://zipkin.microservices.svc.cluster.local:9411/api/v2/spans"
