@@ -2,33 +2,13 @@
 global:
   namespace: microservices
 
-# Configuración del ConfigMap
 config:
   # Puerto del servidor
   serverPort: "8083"
-  # Configuración de Spring Boot Application
-  springApplicationName: "users-api"
-  # Configuración de Zipkin (Spring Cloud Sleuth)
-  springZipkinBaseUrl: "http://zipkin:9411/"
-  springSleuthSamplerProbability: "1.0"
-  # Configuración de H2 Database (base de datos en memoria)
-  springDatasourceUrl: "jdbc:h2:mem:usersdb"
-  springDatasourceDriverClassName: "org.h2.Driver"
-  springDatasourceUsername: "sa"
-  springDatasourcePassword: ""
-  # Configuración de JPA/Hibernate
-  springJpaDatabasePlatform: "org.hibernate.dialect.H2Dialect"
-  springJpaHibernateDdlAuto: "create-drop"
-  springJpaShowSql: "false"
-  # Configuración de H2 Console (deshabilitado en producción)
-  springH2ConsoleEnabled: "false"
-  # Configuración de logging
-  loggingLevelRoot: "INFO"
-  loggingLevelComElgris: "DEBUG"
 
 # Configuración de la imagen
 image:
-  repository: users-api
+  repository: barcino/users-api
   tag: "1.0.0"
   pullPolicy: IfNotPresent
 
@@ -40,11 +20,11 @@ service:
 # Recursos del contenedor
 resources:
   requests:
-    memory: "256Mi"
-    cpu: "100m"
-  limits:
     memory: "512Mi"
     cpu: "200m"
+  limits:
+    memory: "750Mi"
+    cpu: "500m"
 
 # Réplicas
 replicaCount: 1
@@ -52,5 +32,3 @@ replicaCount: 1
 # Labels
 labels:
   app: users-api
-  component: backend
-  tier: data

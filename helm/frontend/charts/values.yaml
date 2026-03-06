@@ -1,10 +1,10 @@
 # Configuración global
 global:
-  namespace: microservices
+  namespace: frontend
 
 # Configuración de la imagen
 image:
-  repository: frontend
+  repository: barcino/frontend
   tag: "1.0.0"
   pullPolicy: IfNotPresent
 
@@ -15,12 +15,10 @@ service:
 
 # Recursos del contenedor
 resources:
-  requests:
-    memory: "128Mi"
-    cpu: "80m"
   limits:
-    memory: "128Mi"
-    cpu: "80m"
+    cpu: 500m
+  requests:
+    cpu: 200m
 
 # Réplicas
 replicaCount: 1
@@ -36,11 +34,8 @@ hpa:
 # Labels
 labels:
   app: frontend
-  component: frontend
-  tier: presentation
 
-# Configuración de nginx proxy
 config:
-  authApiUrl: "http://auth-api.microservices.svc.cluster.local:8081"
-  todosApiUrl: "http://todos-api.microservices.svc.cluster.local:8082"
-  zipkinUrl: "http://zipkin.microservices.svc.cluster.local:9411/api/v2/spans"
+  port: "80"
+  authAddress: "http://microservices-auth-api-svc.microservices.svc.cluster.local:8081"
+  todosAddress: "http://microservices-todos-api-svc.microservices.svc.cluster.local:8082"

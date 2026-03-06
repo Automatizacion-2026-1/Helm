@@ -4,26 +4,14 @@ global:
 
 # Configuración del ConfigMap
 config:
-  # Puerto del servicio
   todoApiPort: "8082"
-  # Configuración de Redis para Pub/Sub
-  redisHost: "redis"
+  redisHost: "microservices-redis-svc.microservices.svc.cluster.local"
   redisPort: "6379"
   redisChannel: "log_channel"
-  # URL de Zipkin para distributed tracing
-  zipkinUrl: "http://zipkin:9411/api/v2/spans"
-  # Configuración de Node.js
-  nodeEnv: "production"
-  # Nombre del servicio para Zipkin tracing
-  serviceName: "todos-api"
-  # Configuración de logging
-  logLevel: "info"
-  # Configuración de Zipkin Context (CLS)
-  zipkinContext: "zipkin"
 
 # Configuración de la imagen
 image:
-  repository: todos-api
+  repository: barcino/todos
   tag: "1.0.0"
   pullPolicy: IfNotPresent
 
@@ -47,5 +35,3 @@ replicaCount: 1
 # Labels
 labels:
   app: todos-api
-  component: backend
-  tier: application
