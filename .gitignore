@@ -1,0 +1,6 @@
+# Helm dependencies
+charts/*.tgz
+
+# Helm temp files
+*.tmp
+*.bak

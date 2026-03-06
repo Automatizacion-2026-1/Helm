@@ -1,0 +1,22 @@
+# Configuración global
+global:
+  namespace: microservices
+replicaCount: 1
+
+image:
+  repository: redis
+  tag: "7.4"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 6379
+
+resources:
+  requests:
+    cpu: 200m
+  limits:
+    cpu: 500m
+
+labels:
+  app: redis

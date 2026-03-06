@@ -1,27 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-{{ .Chart.Name }}-config
+  name: {{ .Values.global.namespace }}-{{ .Chart.Name }}-config
   namespace: {{ .Values.global.namespace }}
   labels:
     app: {{ .Values.labels.app }}
-    component: {{ .Values.labels.component }}
-    tier: {{ .Values.labels.tier }}
 data:
   # Configuración de Redis para Pub/Sub
   REDIS_HOST: {{ .Values.config.redisHost | quote }}
   REDIS_PORT: {{ .Values.config.redisPort | quote }}
   REDIS_CHANNEL: {{ .Values.config.redisChannel | quote }}
-  REDIS_DB: {{ .Values.config.redisDb | quote }}
-  # URL de Zipkin para distributed tracing
-  ZIPKIN_URL: {{ .Values.config.zipkinUrl | quote }}
-  # Nombre del servicio para Zipkin tracing
-  SERVICE_NAME: {{ .Values.config.serviceName | quote }}
-  # Configuración de Python
-  PYTHONUNBUFFERED: {{ .Values.config.pythonUnbuffered | quote }}
-  PYTHONIOENCODING: {{ .Values.config.pythonIoEncoding | quote }}
-  # Configuración de logging
-  LOG_LEVEL: {{ .Values.config.logLevel | quote }}
-  # Configuración de delay aleatorio (en ms)
-  MAX_DELAY_MS: {{ .Values.config.maxDelayMs | quote }}
-  MIN_DELAY_MS: {{ .Values.config.minDelayMs | quote }}

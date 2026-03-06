@@ -1,23 +1,14 @@
-# Configuración global
 global:
   namespace: microservices
 
 # Configuración del ConfigMap
 config:
-  # Puerto del servicio
   authApiPort: "8081"
-  # URL del servicio de usuarios interno
-  usersApiAddress: "http://users-api:8083"
-  # URL de Zipkin para distributed tracing
-  zipkinUrl: "http://zipkin:9411/api/v2/spans"
-  # Nombre del servicio para tracing
-  serviceName: "auth-api"
-  # Usuarios permitidos (formato: username_password)
-  allowedUserHashes: "admin_admin,johnd_foo,janed_ddd"
+  usersApiAddress: "http://microservices-users-api-svc.microservices.svc.cluster.local:8083"
 
 # Configuración de la imagen
 image:
-  repository: auth-api
+  repository: barcino/auth-api
   tag: "1.0.0"
   pullPolicy: IfNotPresent
 
@@ -49,5 +40,3 @@ hpa:
 # Labels
 labels:
   app: auth-api
-  component: backend
-  tier: authentication

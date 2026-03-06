@@ -5,26 +5,13 @@ global:
 # Configuración del ConfigMap
 config:
   # Configuración de Redis para Pub/Sub
-  redisHost: "redis"
+  redisHost: "microservices-redis-svc.microservices.svc.cluster.local"
   redisPort: "6379"
   redisChannel: "log_channel"
-  redisDb: "0"
-  # URL de Zipkin para distributed tracing
-  zipkinUrl: "http://zipkin:9411/api/v2/spans"
-  # Nombre del servicio para Zipkin tracing
-  serviceName: "log-message-processor"
-  # Configuración de Python
-  pythonUnbuffered: "1"
-  pythonIoEncoding: "utf-8"
-  # Configuración de logging
-  logLevel: "INFO"
-  # Configuración de delay aleatorio (en ms)
-  maxDelayMs: "2000"
-  minDelayMs: "0"
 
 # Configuración de la imagen
 image:
-  repository: log-message-processor
+  repository: barcino/logs
   tag: "1.0.0"
   pullPolicy: IfNotPresent
 
@@ -51,5 +38,3 @@ hpa:
 # Labels
 labels:
   app: log-processor
-  component: worker
-  tier: processing
