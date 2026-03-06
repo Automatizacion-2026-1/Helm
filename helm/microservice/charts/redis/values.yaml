@@ -14,9 +14,22 @@ service:
 
 resources:
   requests:
-    cpu: 200m
+    memory: "128Mi"
+    cpu: "100m"
   limits:
-    cpu: 500m
+    memory: "256Mi"
+    cpu: "200m"
 
+# HPA configuración
+hpa:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+# Labels
 labels:
   app: redis
+  component: cache
+  tier: database
