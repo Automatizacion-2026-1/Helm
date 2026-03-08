@@ -10,7 +10,7 @@ image:
 
 # Configuración del servicio
 service:
-  type: LoadBalancer
+  type: ClusterIP
   port: 80
 
 # Recursos del contenedor

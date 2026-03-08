@@ -1,0 +1,8 @@
+httpRoute:
+  kind: HTTPRoute
+  metadata:
+    name: http-route
+  nameParentRefs: "frontend-gateway"
+  nameService: "frontend-frontend-config"
+  port: 80
+  gatewayNamespace: "nginx-gateway" 

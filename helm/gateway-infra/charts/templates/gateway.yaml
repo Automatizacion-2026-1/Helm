@@ -1,0 +1,13 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: {{ .Values.gateway.kind }}
+metadata:
+  name: {{ .Values.gateway.name }}
+spec:
+  gatewayClassName: {{ .Values.gatewayClass.name }}
+  listeners:
+    - name: {{ .Values.gateway.listeners.name }}
+      port: {{ .Values.gateway.listeners.port }}
+      protocol: {{ .Values.gateway.listeners.protocol }}
+      allowedRoutes:
+        namespaces:
+          from: {{ .Values.gateway.listeners.allowedRoutes.namespaces }}
