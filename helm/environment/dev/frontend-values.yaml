@@ -1,0 +1,11 @@
+nameOverride: "frontend-service"
+replicaCount: 2
+image:
+  repository: "tu-acr.azurecr.io/frontend"
+  tag: "v1.0.0"
+service:
+  port: 80
+env:
+  API_URL: "http://auth-service.default.svc.cluster.local"
+route:
+  path: "/"

@@ -1,0 +1,7 @@
+# helm/base-chart/Chart.yaml
+apiVersion: v2
+name: base-microservice
+description: Plantilla maestra para los microservicios del proyecto
+type: application
+version: 1.0.0
+appVersion: "1.0.0"

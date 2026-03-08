@@ -1,0 +1,24 @@
+nameOverride: "inventory-service"
+replicaCount: 2
+
+image:
+  repository: "tu-acr.azurecr.io/inventory-service"
+  tag: "v1.0.0"
+
+service:
+  port: 8080
+
+route:
+  path: "/api/inventory"
+
+networkPolicy:
+  allowIngressFrom:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: frontend-service
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: orders-service
+
+env:
+  JAVA_OPTS: "-Xmx256m"

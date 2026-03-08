@@ -1,0 +1,22 @@
+nameOverride: "auth-service"
+replicaCount: 2
+
+image:
+  repository: "tu-acr.azurecr.io/auth-service"
+  tag: "v1.0.0"
+
+service:
+  port: 3000
+
+route:
+  path: "/api/auth"
+
+networkPolicy:
+  allowIngressFrom:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: frontend-service
+
+env:
+  NODE_ENV: "development"
+  DB_HOST: "auth-db-service"
