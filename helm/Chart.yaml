@@ -26,12 +26,12 @@ dependencies:
   repository: file://./microservice/charts/users-api
 - name: gateway-infra
   version: 0.1.0
-  repository: "file://gateway-infra"
+  repository: "file://./gateway-infra"
 
 - name: gateway-controller
   version: 0.1.0
-  repository: "file://gateway-controller"
+  repository: "file://./gateway-controller"
 
 - name: routes
   version: 0.1.0
-  repository: "file://routes"
+  repository: "file://./routes"
