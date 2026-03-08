@@ -1,13 +1,13 @@
 gatewayClass:
   name: "nginx"
   kind: "GatewayClass"
-  contollerName: "nginx.org/gateway-controller"
+  contollerName: "gateway.nginx.org/nginx-gateway-controller"
 
 
 gateway:
   kind: "Gateway"
   name: "frontend-gateway"  
-  namespaces: "nginx-gateway"
+  namespaces: "gateway-infra"
   listeners:
       name: "http"
       port: 80

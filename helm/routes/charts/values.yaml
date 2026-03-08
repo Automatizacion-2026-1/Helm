@@ -2,7 +2,8 @@ httpRoute:
   kind: HTTPRoute
   metadata:
     name: http-route
+    namespace: "frontend"
   nameParentRefs: "frontend-gateway"
-  nameService: "frontend-frontend-config"
+  nameService: "frontend-frontend-svc"
   port: 80
-  gatewayNamespace: "nginx-gateway" 
+  gatewayNamespace: "gateway-infra" 

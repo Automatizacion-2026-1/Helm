@@ -2,6 +2,7 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: {{ .Values.httpRoute.kind }}
 metadata:
   name: {{ .Values.httpRoute.metadata.name }}
+  namespace: {{ .Values.httpRoute.metadata.namespace }}
 spec:
   parentRefs:
     - name: {{ .Values.httpRoute.nameParentRefs }}
