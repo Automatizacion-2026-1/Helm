@@ -7,7 +7,7 @@ appVersion: "1.0.0"
 
 dependencies:
 - name: frontend
-  version: 0.1.0
+  version: 0.2.0
   repository: file://./frontend/charts
 - name: auth-api
   version: 0.1.0

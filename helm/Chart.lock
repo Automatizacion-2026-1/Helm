@@ -1,7 +1,7 @@
 dependencies:
 - name: frontend
   repository: file://./frontend/charts
-  version: 0.1.0
+  version: 0.2.0
 - name: auth-api
   repository: file://./microservice/charts/auth-api
   version: 0.1.0
@@ -17,5 +17,14 @@ dependencies:
 - name: users-api
   repository: file://./microservice/charts/users-api
   version: 0.1.0
-digest: sha256:c850919c68b5c5504dbf544aa74dcfd235a37d67051d50235343b582cf5d9878
-generated: "2026-03-05T01:40:08.487531444-05:00"
+- name: gateway-infra
+  repository: file://./gateway-infra/charts
+  version: 0.1.0
+- name: gateway-controller
+  repository: file://./gateway-controller/charts
+  version: 0.1.0
+- name: routes
+  repository: file://./routes/charts
+  version: 0.1.0
+digest: sha256:262d4913a7eb8c48c752a5cf43b23db22635f209d3a737b97fbcde7935b4223b
+generated: "2026-03-08T12:44:49.362606977-05:00"
