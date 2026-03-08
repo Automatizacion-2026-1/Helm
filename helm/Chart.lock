@@ -19,12 +19,12 @@ dependencies:
   version: 0.1.0
 - name: gateway-infra
   repository: file://./gateway-infra/charts
-  version: 0.1.0
+  version: 0.2.0
 - name: gateway-controller
   repository: file://./gateway-controller/charts
   version: 0.1.0
 - name: routes
   repository: file://./routes/charts
   version: 0.1.0
-digest: sha256:262d4913a7eb8c48c752a5cf43b23db22635f209d3a737b97fbcde7935b4223b
-generated: "2026-03-08T12:44:49.362606977-05:00"
+digest: sha256:8c93bf5d3f91c2acc5758eebc54fdbd397781f3a6c4b4e790a33e997bd9367a6
+generated: "2026-03-08T12:52:10.676268874-05:00"

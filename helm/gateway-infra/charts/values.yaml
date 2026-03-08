@@ -13,4 +13,4 @@ gateway:
       port: 80
       protocol: "HTTP"
       allowedRoutes:
-        namespaces: "frontend"
+        namespaces: "All"
