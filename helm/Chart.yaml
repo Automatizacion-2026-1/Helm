@@ -7,7 +7,7 @@ appVersion: "1.0.0"
 
 dependencies:
 - name: frontend
-  version: 0.1.0
+  version: 0.2.0
   repository: file://./frontend/charts
 - name: auth-api
   version: 0.1.0
@@ -24,3 +24,14 @@ dependencies:
 - name: users-api
   version: 0.1.0
   repository: file://./microservice/charts/users-api
+- name: gateway-infra
+  version: 0.2.0
+  repository: "file://./gateway-infra/charts"
+
+- name: gateway-controller
+  version: 0.1.0
+  repository: "file://./gateway-controller/charts"
+
+- name: routes
+  version: 0.1.0
+  repository: "file://./routes/charts"

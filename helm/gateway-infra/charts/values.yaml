@@ -1,0 +1,17 @@
+gatewayClass:
+  name: "nginx"
+  kind: "GatewayClass"
+  contollerName: "gateway.nginx.org/nginx-gateway-controller"
+
+
+gateway:
+  kind: "Gateway"
+  name: "frontend-gateway"  
+  namespaces: "gateway-infra"
+  listeners:
+      name: "http"
+      port: 80
+      protocol: "HTTP"
+      allowedRoutes:
+        namespaces: "All"
+  hostnames: "www.santiago.monster"

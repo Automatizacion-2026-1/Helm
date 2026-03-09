@@ -1,0 +1,19 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: {{ .Values.httpRoute.kind }}
+metadata:
+  name: {{ .Values.httpRoute.metadata.name }}
+  namespace: {{ .Values.httpRoute.metadata.namespace }}
+spec:
+  parentRefs:
+    - name: {{ .Values.httpRoute.nameParentRefs }}
+      namespace: {{ .Values.httpRoute.gatewayNamespace }}
+  hostnames:
+  - "www.santiago.monster"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: {{ .Values.httpRoute.nameService }}
+          port: {{ .Values.httpRoute.port }}
