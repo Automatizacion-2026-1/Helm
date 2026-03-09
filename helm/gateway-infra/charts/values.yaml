@@ -1,17 +1,28 @@
 gatewayClass:
   name: "nginx"
   kind: "GatewayClass"
-  contollerName: "gateway.nginx.org/nginx-gateway-controller"
+  controllerName: "gateway.nginx.org/nginx-gateway-controller"
 
-
+# Valores para Helm
 gateway:
   kind: "Gateway"
-  name: "frontend-gateway"  
+  name: "frontend-gateway"
   namespaces: "gateway-infra"
   listeners:
-      name: "http"
-      port: 80
-      protocol: "HTTP"
+    name: "http"
+    port: 80
+    protocol: "HTTP"
+    allowedRoutes:
+      namespaces: "All"
+    tls:
+      name: "https"
+      port: 443
+      protocol: "HTTPS"
       allowedRoutes:
         namespaces: "All"
+      mode: "Terminate"
+      certificateRefs:
+        name: "santiago-tls-secret"
+        kind: "Secret"
+        group: ""
   hostnames: "www.santiago.monster"
