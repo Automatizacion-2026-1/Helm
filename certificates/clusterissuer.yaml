@@ -9,8 +9,11 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-dns-key
     solvers:
-      - dns01:
-          godaddy:
+    - dns01:
+        webhook:
+          groupName: acme.santiago.monster   # debe coincidir con el groupName del webhook
+          solverName: godaddy
+          config:
             apiKeySecretRef:
               name: godaddy-secret
               key: api-key
