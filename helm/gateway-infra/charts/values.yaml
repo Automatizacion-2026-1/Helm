@@ -14,3 +14,4 @@ gateway:
       protocol: "HTTP"
       allowedRoutes:
         namespaces: "All"
+  hostnames: "www.santiago.monster"

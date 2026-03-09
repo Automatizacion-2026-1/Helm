@@ -7,6 +7,8 @@ spec:
   parentRefs:
     - name: {{ .Values.httpRoute.nameParentRefs }}
       namespace: {{ .Values.httpRoute.gatewayNamespace }}
+  hostnames:
+  - "www.santiago.monster"
   rules:
     - matches:
         - path:

@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: santiago-tls
+  namespace: gateway-infra           # el namespace donde tu gateway está
+spec:
+  secretName: santiago-tls-secret   # secret que se creará con el certificado
+  issuerRef:
+    name: letsencrypt-http
+    kind: ClusterIssuer
+  dnsNames:
+  - www.santiago.monster            # el dominio que quieres certificar

@@ -9,6 +9,11 @@ spec:
     - name: {{ .Values.gateway.listeners.name }}
       port: {{ .Values.gateway.listeners.port }}
       protocol: {{ .Values.gateway.listeners.protocol }}
+      hostnames: {{.Values.gateway.hostnames }}
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - name: santiago-tls-secret
       allowedRoutes:
         namespaces:
           from: {{ .Values.gateway.listeners.allowedRoutes.namespaces }}
