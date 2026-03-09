@@ -11,7 +11,7 @@ spec:
     solvers:
     - dns01:
         webhook:
-          groupName: acme.santiago.monster   # debe coincidir con el groupName del webhook
+          groupName: acme.santiago.monster
           solverName: godaddy
           config:
             apiKeySecretRef:
@@ -20,3 +20,5 @@ spec:
             apiSecretSecretRef:
               name: godaddy-secret
               key: api-secret
+            production: true
+            ttl: 600
