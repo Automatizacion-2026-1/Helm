@@ -1,7 +1,7 @@
 gatewayClass:
   name: "nginx"
   kind: "GatewayClass"
-  contollerName: "gateway.nginx.org/nginx-gateway-controller"
+  controllerName: "gateway.nginx.org/nginx-gateway-controller"
 
 
 gateway:
