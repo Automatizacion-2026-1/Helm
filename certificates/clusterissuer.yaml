@@ -11,14 +11,11 @@ spec:
     solvers:
     - dns01:
         webhook:
-          groupName: santiago.monster
+          groupName: acme.santiago.monster
           solverName: godaddy
           config:
             apiKeySecretRef:
-              name: godaddy-secret
-              key: api-key
-            apiSecretSecretRef:
-              name: godaddy-secret
-              key: api-secret
+              name: godaddy-api-key
+              key: token
             production: true
             ttl: 600
