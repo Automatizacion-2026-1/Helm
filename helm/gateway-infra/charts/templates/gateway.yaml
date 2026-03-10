@@ -6,14 +6,26 @@ metadata:
 spec:
   gatewayClassName: {{ .Values.gatewayClass.name }}
   listeners:
+    # Listener HTTP para pruebas
     - name: {{ .Values.gateway.listeners.name }}
       port: {{ .Values.gateway.listeners.port }}
       protocol: {{ .Values.gateway.listeners.protocol }}
-      hostnames: {{.Values.gateway.hostnames }}
-      tls:
-        mode: Terminate
-        certificateRefs:
-        - name: santiago-tls-secret
+      hostnames: {{ .Values.gateway.hostnames }}
       allowedRoutes:
         namespaces:
           from: {{ .Values.gateway.listeners.allowedRoutes.namespaces }}
+
+    # Listener HTTPS usando DNS-01
+    - name: {{ .Values.gateway.listeners.tls.name }}
+      port: {{ .Values.gateway.listeners.tls.port }}
+      protocol: {{ .Values.gateway.listeners.tls.protocol }}
+      hostnames: {{ .Values.gateway.hostnames }}
+      allowedRoutes:
+        namespaces:
+          from: {{ .Values.gateway.listeners.allowedRoutes.namespaces }}
+      tls:
+        mode: {{ .Values.gateway.listeners.tls.mode }}
+        certificateRefs:
+          - name: {{ .Values.gateway.listeners.tls.certificateRefs.name }}
+            kind: {{ .Values.gateway.listeners.tls.certificateRefs.kind }}
+            group: {{ .Values.gateway.listeners.tls.certificateRefs.group }}

@@ -1,16 +1,21 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-http
+  name: letsencrypt-dns
 spec:
   acme:
-    email: shernandezsaavedra2004@gmail.com     # tu email personal o de dominio
+    email: shernandezsaavedra2004@gmail.com
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: letsencrypt-http-key     # cert-manager creará esto
+      name: letsencrypt-dns-key
     solvers:
-    - http01:
-        gatewayHTTPRoute:
-          parentRefs:
-          - name: frontend-gateway   # nombre del Gateway API que ya tienes
-            namespace: gateway-infra # namespace donde está el gateway
+    - dns01:
+        webhook:
+          groupName: acme.santiago.monster
+          solverName: godaddy
+          config:
+            apiKeySecretRef:
+              name: godaddy-api-key
+              key: token
+            production: true
+            ttl: 600
