@@ -22,7 +22,7 @@ gateway:
         namespaces: "All"
       mode: "Terminate"
       certificateRefs:
-        name: "santiago-tls-secret"
+        name: "santiago-wildcard-tls"
         kind: "Secret"
         group: ""
   hostnames: "www.santiago.monster"
