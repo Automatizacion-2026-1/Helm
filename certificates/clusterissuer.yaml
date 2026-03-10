@@ -11,7 +11,7 @@ spec:
     solvers:
     - dns01:
         webhook:
-          groupName: acme.santiago.monster
+          groupName: santiago.monster
           solverName: godaddy
           config:
             apiKeySecretRef:
