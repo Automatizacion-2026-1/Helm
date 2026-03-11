@@ -46,4 +46,4 @@ securityContext:
   runAsUser: 1000
   fsGroup: 2000
   allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: true
+  readOnlyRootFilesystem: false
