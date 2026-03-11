@@ -13,14 +13,24 @@ spec:
       labels:
         app: {{ .Values.labels.app }}
     spec:
+      securityContext:                          
+          runAsNonRoot: true
+          runAsUser: {{ .Values.securityContext.runAsUser }}
+          fsGroup: {{ .Values.securityContext.fsGroup }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.service.port }}
-          resources:
-            requests:
-              cpu: {{ .Values.resources.requests.cpu }}
-            limits:
-              cpu: {{ .Values.resources.limits.cpu }}
+            securityContext:                        
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+            resources:
+              requests:
+                cpu: {{ .Values.resources.requests.cpu }}
+              limits:
+                cpu: {{ .Values.resources.limits.cpu }}

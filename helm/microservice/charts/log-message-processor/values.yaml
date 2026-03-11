@@ -38,3 +38,10 @@ hpa:
 # Labels
 labels:
   app: log-processor
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 2000
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true

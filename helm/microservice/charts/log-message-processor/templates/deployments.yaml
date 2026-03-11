@@ -16,6 +16,10 @@ spec:
       labels:
         app: {{ .Values.labels.app }}
     spec:
+      securityContext:                            
+        runAsNonRoot: true
+        runAsUser: {{ .Values.securityContext.runAsUser }}
+        fsGroup: {{ .Values.securityContext.fsGroup }}
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

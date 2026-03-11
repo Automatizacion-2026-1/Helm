@@ -33,3 +33,10 @@ labels:
   app: redis
   component: cache
   tier: database
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 2000
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
