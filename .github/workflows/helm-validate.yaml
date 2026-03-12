@@ -20,13 +20,45 @@ jobs:
         with:
           version: 'latest'
 
-      - name: Lint Frontend Chart
-        run: helm lint helm/charts/frontend
+      # Lint microservices
+      - name: Lint Auth API
+        run: helm lint helm/microservice/charts/auth-api
 
-      - name: Lint Backend Chart
-        run: helm lint helm/charts/backend
+      - name: Lint Todos API
+        run: helm lint helm/microservice/charts/todos-api
 
-      - name: Dry Run (Simulación)
+      - name: Lint Users API
+        run: helm lint helm/microservice/charts/users-api
+
+      - name: Lint Log Message Processor
+        run: helm lint helm/microservice/charts/log-message-processor
+
+      - name: Lint Redis
+        run: helm lint helm/microservice/charts/redis
+
+      # Lint del frontend
+      - name: Lint Frontend
+        run: helm lint helm/frontend
+
+      # Lint del gateway 
+      - name: Lint Gateway Controller
+        run: helm lint helm/gateway-controller
+
+      - name: Lint Gateway Infra
+        run: helm lint helm/gateway-infra
+
+      # Dry Run 
+      - name: Dry Run Microservicios
         run: |
-          helm install --dry-run --debug test-release ./helm/charts/frontend
-          helm install --dry-run --debug test-release ./helm/charts/backend
+          helm install --dry-run --debug test-microservice helm/microservice \
+            --set global.namespace=microservices
+
+      - name: Dry Run Frontend
+        run: |
+          helm install --dry-run --debug test-frontend helm/frontend \
+            --set global.namespace=frontend
+
+      - name: Dry Run Gateway Infra
+        run: |
+          helm install --dry-run --debug test-gateway helm/gateway-infra \
+            --set global.namespace=gateway-infra
