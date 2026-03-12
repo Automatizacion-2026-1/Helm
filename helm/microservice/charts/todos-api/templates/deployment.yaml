@@ -17,10 +17,10 @@ spec:
       labels:
         app: {{ .Values.labels.app }}
     spec:
-      securityContext:                            
-          runAsNonRoot: true
-          runAsUser: {{ .Values.securityContext.runAsUser }}
-          fsGroup: {{ .Values.securityContext.fsGroup }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: {{ .Values.securityContext.runAsUser }}
+        fsGroup: {{ .Values.securityContext.fsGroup }}
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -29,7 +29,7 @@ spec:
         - containerPort: {{ .Values.service.port }}
           name: http
           protocol: TCP
-        securityContext:                        
+        securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
           capabilities:
@@ -42,11 +42,14 @@ spec:
           limits:
             cpu: {{ .Values.resources.limits.cpu }}
             memory: {{ .Values.resources.limits.memory }}
-        # Variables de entorno desde ConfigMap
         envFrom:
         - configMapRef:
             name: {{ .Values.global.namespace }}-{{ .Chart.Name }}-config
         - secretRef:
             name: {{ .Values.global.namespace }}-{{ .Chart.Name }}-secret
-        
-
+        volumeMounts:                    
+        - name: tmp
+          mountPath: /tmp
+      volumes:                           
+      - name: tmp
+        emptyDir: {}

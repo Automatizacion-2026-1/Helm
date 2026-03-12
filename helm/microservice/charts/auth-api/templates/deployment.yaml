@@ -16,12 +16,11 @@ spec:
       labels:
         app: {{ .Values.labels.app }}
     spec:
-     securityContext:                          
+      securityContext:                          
         runAsNonRoot: true
         runAsUser: {{ .Values.securityContext.runAsUser }}
         fsGroup: {{ .Values.securityContext.fsGroup }}
       containers:
-    
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -45,4 +44,3 @@ spec:
             name: {{ .Values.global.namespace }}-{{ .Chart.Name }}-config
         - secretRef:
             name: {{ .Values.global.namespace }}-{{ .Chart.Name }}-secret
-        
