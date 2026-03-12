@@ -55,5 +55,5 @@ jobs:
 
       - name: Dry Run completo
         run: |
-          helm install --dry-run --debug test-release helm/ \
+          helm install --dry-run=client --debug test-release helm/ \
             --set global.namespace=microservices
