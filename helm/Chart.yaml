@@ -1,37 +1,52 @@
 apiVersion: v2
 name: microservice-app
-description: A Helm chart for the Microservices Application
+description: Helm chart principal para el despliegue de la aplicación de microservicios
 type: application
 version: 0.1.0
 appVersion: "1.0.0"
-
+ 
 dependencies:
-- name: frontend
-  version: 0.2.0
-  repository: file://./frontend/charts
-- name: auth-api
-  version: 0.1.0
-  repository: file://./microservice/charts/auth-api
-- name: log-message-processor
-  version: 0.1.0
-  repository: file://./microservice/charts/log-message-processor
-- name: redis
-  version: 0.1.0
-  repository: file://./microservice/charts/redis
-- name: todos-api
-  version: 0.1.0
-  repository: file://./microservice/charts/todos-api
-- name: users-api
-  version: 0.1.0
-  repository: file://./microservice/charts/users-api
-- name: gateway-infra
-  version: 0.2.0
-  repository: "file://./gateway-infra/charts"
-
-- name: gateway-controller
-  version: 0.1.0
-  repository: "file://./gateway-controller/charts"
-
-- name: routes
-  version: 0.1.0
-  repository: "file://./routes/charts"
+  - name: frontend
+    version: 0.2.0
+    repository: file://./frontend
+    condition: frontend.enabled
+ 
+  - name: auth-api
+    version: 0.1.0
+    repository: file://./microservice/charts/auth-api
+    condition: auth-api.enabled
+ 
+  - name: log-message-processor
+    version: 0.1.0
+    repository: file://./microservice/charts/log-message-processor
+    condition: log-message-processor.enabled
+ 
+  - name: redis
+    version: 0.1.0
+    repository: file://./microservice/charts/redis
+    condition: redis.enabled
+ 
+  - name: todos-api
+    version: 0.1.0
+    repository: file://./microservice/charts/todos-api
+    condition: todos-api.enabled
+ 
+  - name: users-api
+    version: 0.1.0
+    repository: file://./microservice/charts/users-api
+    condition: users-api.enabled
+ 
+  - name: gateway-infra
+    version: 0.2.0
+    repository: file://./gateway-infra
+    condition: gateway-infra.enabled
+ 
+  - name: gateway-controller
+    version: 0.1.0
+    repository: file://./gateway-controller
+    condition: gateway-controller.enabled
+ 
+  - name: routes
+    version: 0.1.0
+    repository: file://./routes
+    condition: routes.enabled

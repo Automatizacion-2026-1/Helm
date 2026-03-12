@@ -1,6 +1,9 @@
-# Helm dependencies
-charts/*.tgz
-
+helm/charts/*.tgz
+helm/microservice/charts/*.tgz
+ 
+.DS_Store
+**/.DS_Store
+ 
 # Helm temp files
 *.tmp
 *.bak
