@@ -29,7 +29,7 @@ resources:
 # Réplicas
 replicaCount: 1
 
-# HPA configuración
+# HPA 
 hpa:
   enabled: true
   minReplicas: 1
