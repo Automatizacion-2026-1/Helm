@@ -20,7 +20,9 @@ jobs:
         with:
           version: 'latest'
 
-      # Lint microservices
+      - name: Resolve Helm dependencies
+        run: helm dependency update helm/
+
       - name: Lint Auth API
         run: helm lint helm/microservice/charts/auth-api
 
@@ -36,29 +38,22 @@ jobs:
       - name: Lint Redis
         run: helm lint helm/microservice/charts/redis
 
-      # Lint del frontend
       - name: Lint Frontend
         run: helm lint helm/frontend
 
-      # Lint del gateway 
       - name: Lint Gateway Controller
         run: helm lint helm/gateway-controller
 
       - name: Lint Gateway Infra
         run: helm lint helm/gateway-infra
 
-      # Dry Run 
-      - name: Dry Run Microservicios
+      - name: Lint Routes
+        run: helm lint helm/routes
+
+      - name: Lint chart raíz
+        run: helm lint helm/
+
+      - name: Dry Run completo
         run: |
-          helm install --dry-run --debug test-microservice helm/microservice \
+          helm install --dry-run --debug test-release helm/ \
             --set global.namespace=microservices
-
-      - name: Dry Run Frontend
-        run: |
-          helm install --dry-run --debug test-frontend helm/frontend \
-            --set global.namespace=frontend
-
-      - name: Dry Run Gateway Infra
-        run: |
-          helm install --dry-run --debug test-gateway helm/gateway-infra \
-            --set global.namespace=gateway-infra

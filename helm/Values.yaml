@@ -1,0 +1,30 @@
+# Namespace global compartido por todos los microservicios
+global:
+  namespace: microservices
+
+frontend:
+  enabled: true
+
+auth-api:
+  enabled: true
+
+log-message-processor:
+  enabled: true
+
+redis:
+  enabled: true
+
+todos-api:
+  enabled: true
+
+users-api:
+  enabled: true
+
+gateway-infra:
+  enabled: true
+
+gateway-controller:
+  enabled: true
+
+routes:
+  enabled: true
