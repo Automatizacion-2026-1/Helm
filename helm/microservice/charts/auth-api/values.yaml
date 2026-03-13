@@ -1,22 +1,18 @@
 global:
   namespace: microservices
-
 # Configuración del ConfigMap
 config:
   authApiPort: "8081"
   usersApiAddress: "http://microservices-users-api-svc.microservices.svc.cluster.local:8083"
-
 # Configuración de la imagen
 image:
-  repository: barcino/auth-api
-  tag: "1.0.0"
+  repository: acrdevmicroservices2026.azurecr.io/auth-api
+  tag: "v1.0.0"
   pullPolicy: IfNotPresent
-
 # Configuración del servicio
 service:
   type: ClusterIP
   port: 8081
-
 # Recursos del contenedor
 resources:
   requests:
@@ -25,10 +21,8 @@ resources:
   limits:
     memory: "256Mi"
     cpu: "200m"
-
 # Réplicas
 replicaCount: 1
-
 # HPA configuración
 hpa:
   enabled: true
@@ -36,7 +30,6 @@ hpa:
   maxReplicas: 3
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 80
-
 # Labels
 labels:
   app: auth-api
