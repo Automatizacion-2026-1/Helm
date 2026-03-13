@@ -1,28 +1,23 @@
 # Configuración global
 global:
   namespace: frontend
-
 # Configuración de la imagen
 image:
-  repository: barcino/frontend
-  tag: "1.0.0"
+  repository: acrdevmicroservices2026.azurecr.io/frontend
+  tag: "v1.0.0"
   pullPolicy: IfNotPresent
-
 # Configuración del servicio
 service:
   type: ClusterIP
   port: 80
-
 # Recursos del contenedor
 resources:
   limits:
     cpu: 500m
   requests:
     cpu: 200m
-
 # Réplicas
 replicaCount: 1
-
 # HPA configuración
 hpa:
   enabled: true
@@ -30,13 +25,11 @@ hpa:
   maxReplicas: 3
   targetCPUUtilizationPercentage: 20
   targetMemoryUtilizationPercentage: 20
-
 # Labels
 labels:
   app: frontend
   component: frontend
   tier: presentation
-
 config:
   port: "80"
   authAddress: "http://microservices-auth-api-svc.microservices.svc.cluster.local:8081"
