@@ -1,20 +1,17 @@
 # Configuración global
 global:
   namespace: microservices
-
 # Configuración del ConfigMap
 config:
   # Configuración de Redis para Pub/Sub
   redisHost: "microservices-redis-svc.microservices.svc.cluster.local"
   redisPort: "6379"
   redisChannel: "log_channel"
-
 # Configuración de la imagen
 image:
-  repository: barcino/logs
-  tag: "1.0.0"
+  repository: acrdevmicroservices2026.azurecr.io/log-message-processor
+  tag: "v1.0.0"
   pullPolicy: IfNotPresent
-
 # Recursos del contenedor
 resources:
   requests:
@@ -23,10 +20,8 @@ resources:
   limits:
     memory: "256Mi"
     cpu: "200m"
-
 # Réplicas
 replicaCount: 1
-
 # HPA configuración
 hpa:
   enabled: true
@@ -34,7 +29,6 @@ hpa:
   maxReplicas: 5
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 80
-
 # Labels
 labels:
   app: log-processor
