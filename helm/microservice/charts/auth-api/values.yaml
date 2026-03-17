@@ -7,7 +7,7 @@ config:
 # Configuración de la imagen
 image:
   repository: acrdevmicroservices2026.azurecr.io/auth-api
-  tag: "v1.0.0"
+  tag: "v1.0.1"
   pullPolicy: IfNotPresent
 # Configuración del servicio
 service:
