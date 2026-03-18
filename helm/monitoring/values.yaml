@@ -14,11 +14,11 @@ kube-prometheus-stack:
       # Recursos (Estos valores son temporales y sujetos a cambios según capacidad del cluster)
       resources:
         requests:
-          cpu: 200m
-          memory: 512Mi
+          cpu: 100m
+          memory: 265Mi
         limits:
-          cpu: 500m
-          memory: 1Gi #Se puede modificar según necesidades
+          cpu: 300m
+          memory: 512Mi #Se puede modificar según necesidades
 
       # PVC para métricas
       storageSpec:
@@ -297,6 +297,11 @@ kube-prometheus-stack:
 loki:
   deploymentMode: SingleBinary  # más simple para dev
 
+  chunksCache:
+    enabled: false # deshabilitar cache en dev
+  resultsCache:
+    enabled: false  # deshabilitar cache en dev
+
   loki:
     auth_enabled: false
 
@@ -365,7 +370,7 @@ fluent-bit:
   config:
     outputs: |
       [OUTPUT]
-          Name              grafana-loki
+          Name              loki
           Match             kube.*
           Host              monitoring-loki
           Port              3100
