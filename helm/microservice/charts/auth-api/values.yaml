@@ -33,3 +33,7 @@ hpa:
 # Labels
 labels:
   app: auth-api
+
+#Linkerd annotations
+annotations:
+    linkerd.io/inject: enabled
