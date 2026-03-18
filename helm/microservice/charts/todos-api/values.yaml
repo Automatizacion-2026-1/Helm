@@ -10,7 +10,7 @@ config:
 # Configuración de la imagen
 image:
   repository: acrdevmicroservices2026.azurecr.io/todos-api
-  tag: "v1.0.1"
+  tag: "v1.0.2"
   pullPolicy: IfNotPresent
 # Configuración del servicio
 service:
@@ -36,6 +36,5 @@ hpa:
 # Labels
 labels:
   app: todos-api
-
 annotations:
-    linkerd.io/inject: enabled
+  linkerd.io/inject: enabled
