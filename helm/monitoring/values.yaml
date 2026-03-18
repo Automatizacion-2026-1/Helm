@@ -46,7 +46,7 @@ kube-prometheus-stack:
           cpu: 100m
           memory: 128Mi
 
-    config:
+    config: |
       global:
         #(Datos sensibles no se deben hardcodear en producción — usar Azure Key Vault o Kubernetes Secrets)
         smtp_smarthost: "smtp.gmail.com:587"
