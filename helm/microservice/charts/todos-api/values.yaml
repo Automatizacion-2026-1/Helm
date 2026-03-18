@@ -36,3 +36,6 @@ hpa:
 # Labels
 labels:
   app: todos-api
+
+annotations:
+    linkerd.io/inject: enabled

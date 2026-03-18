@@ -34,3 +34,6 @@ config:
   port: "80"
   authAddress: "http://microservices-auth-api-svc.microservices.svc.cluster.local:8081"
   todosAddress: "http://microservices-todos-api-svc.microservices.svc.cluster.local:8082"
+
+annotations:
+    linkerd.io/inject: enabled
