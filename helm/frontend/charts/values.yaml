@@ -4,7 +4,7 @@ global:
 # Configuración de la imagen
 image:
   repository: acrdevmicroservices2026.azurecr.io/frontend
-  tag: "v1.0.2"
+  tag: "v1.0.3"
   pullPolicy: IfNotPresent
 # Configuración del servicio
 service:
@@ -34,6 +34,5 @@ config:
   port: "80"
   authAddress: "http://microservices-auth-api-svc.microservices.svc.cluster.local:8081"
   todosAddress: "http://microservices-todos-api-svc.microservices.svc.cluster.local:8082"
-
 annotations:
-    linkerd.io/inject: enabled
+  linkerd.io/inject: enabled
