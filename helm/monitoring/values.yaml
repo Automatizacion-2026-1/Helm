@@ -1,0 +1,77 @@
+# KUBE-PROMETHEUS-STACK Includes: Prometheus, Grafana, AlertManager, node-exporter 
+
+kube-prometheus-stack:
+
+  prometheus:
+    prometheusSpec:
+      retention: 1d
+      retentionSize: "5GB"
+      resources:
+        requests:
+          cpu: 200m
+          memory: 512Mi
+        limits:
+          cpu: 500m
+          memory: 1Gi #Valor sujeto a cambios (capacidad)
+      # PVC para métricas
+      storageSpec:
+        volumeClaimTemplate:
+         spec:
+          storageClassName: managed-csi # Azure Disk en AKS 
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+                storage: 10Gi #Valor sujeto a cambios
+      # Scraping de todos los namespaces
+      podMonitorSelectorNilUsesHelmValues: false
+      serviceMonitorSelectorNilUsesHelmValues: false
+      ruleSelectorNilUsesHelmValues: false
+  alertmanager:
+   alertmanagerSpec:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+   config:
+      global:
+        smtp_smarthost: "smtp.gmail.com:587"
+       # No se indican las credenciales debido a que son datos sensibles
+        smtp_from: "example@gmail.com"
+        smtp_auth_username: "example@gmail.com"
+        smtp_auth_password: " "
+        smtp_require_tls: true
+
+      route:
+        group_by: ["alertname", "namespace"]
+        group_wait: 30s
+        group_interval: 5m
+        repeat_interval: 12h
+        receiver: "email-alerts"
+        routes:
+          # Alertas críticas — notificar inmediatamente
+          - matchers:
+             - name: severity
+               value: critical
+            receiver: "email-alerts"
+            group_wait: 10s
+            repeat_interval: 1h
+          # Alertas de warning — agrupar más
+          - matchers:
+             - name: severity
+               value: warning
+            receiver: "email-alerts"
+            group_wait: 1m
+            repeat_interval: 4h
+
+      receivers:
+         - name: "email-alerts"
+           email_configs:
+              - to: "lina.andrade0411@gmail.com"
+                send_resolved: true
+                headers:
+                  subject: >-
+                    [{{ .Status | toUpper }}] {{ .GroupLabels.alertname }}
+                    - {{ .GroupLabels.namespace }}
