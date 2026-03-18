@@ -10,7 +10,7 @@ config:
 # Configuración de la imagen
 image:
   repository: acrdevmicroservices2026.azurecr.io/log-message-processor
-  tag: "v1.0.1"
+  tag: "v1.0.2"
   pullPolicy: IfNotPresent
 # Recursos del contenedor
 resources:
@@ -32,3 +32,7 @@ hpa:
 # Labels
 labels:
   app: log-processor
+
+#Linkerd annotations
+annotations:
+    linkerd.io/inject: enabled

@@ -33,3 +33,7 @@ labels:
   app: redis
   component: cache
   tier: database
+
+#Linkerd annotations
+annotations:
+    linkerd.io/inject: enabled
