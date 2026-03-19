@@ -13,9 +13,9 @@ service:
 # Recursos del contenedor
 resources:
   limits:
-    cpu: 200m
+    cpu: 500m
   requests:
-    cpu: 100m
+    cpu: 200m
 # Réplicas
 replicaCount: 1
 # HPA configuración
