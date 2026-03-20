@@ -35,7 +35,7 @@ kube-prometheus-stack:
       serviceMonitorSelectorNilUsesHelmValues: false
       ruleSelectorNilUsesHelmValues: false
     # ── ALERTAS PERSONALIZADAS ──
-    additionalPrometheusRulesMap:
+  additionalPrometheusRulesMap:
       custom-alerts:
         groups:
           # Caída de servicios
@@ -155,8 +155,7 @@ kube-prometheus-stack:
                   description: >-
                     El servicio {{ $labels.service }} tiene más del
                     5% de respuestas 5xx.
-
-    # ── ALERTMANAGER ──
+   # ── ALERTMANAGER ──
   alertmanager:
     alertmanagerSpec:
       resources:
@@ -172,9 +171,9 @@ kube-prometheus-stack:
   grafana:
     adminPassword: "admin123"  # cambiar en producción
 
-    # Sin ingress por ahora — NodePort para acceso directo y testing
+    # Sin ingress por ahora — A espera de validación para acceso externo
     service:
-      type: NodePort
+      type: ClusterIP
 
     # PVC para dashboards y configuración
     persistence:
