@@ -1,0 +1,356 @@
+# ============================================================
+# KUBE-PROMETHEUS-STACK
+# Includes: Prometheus, Grafana, AlertManager, node-exporter
+# ============================================================
+kube-prometheus-stack:
+
+  # ── PROMETHEUS ──
+  prometheus:
+    prometheusSpec:
+      # Retención de métricas — 1 días
+      retention: 1d
+      retentionSize: "5GB"
+
+      # Recursos (Estos valores son temporales y sujetos a cambios según capacidad del cluster)
+      resources:
+        requests:
+          cpu: 100m
+          memory: 265Mi
+        limits:
+          cpu: 300m
+          memory: 512Mi #Se puede modificar según necesidades
+
+      # PVC para métricas
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: managed-csi  # Azure Disk en AKS
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 10Gi # Puede modificarse
+
+      # Scraping de todos los namespaces
+      podMonitorSelectorNilUsesHelmValues: false
+      serviceMonitorSelectorNilUsesHelmValues: false
+      ruleSelectorNilUsesHelmValues: false
+    # ── ALERTAS PERSONALIZADAS ──
+  additionalPrometheusRulesMap:
+      custom-alerts:
+        groups:
+          # Caída de servicios
+          - name: service-availability
+            rules:
+              - alert: PodCrashLooping
+                expr: rate(kube_pod_container_status_restarts_total[15m]) > 0
+                for: 5m
+                labels:
+                  severity: critical
+                annotations:
+                  summary: "Pod {{ $labels.pod }} está en CrashLoop"
+                  description: >-
+                    El pod {{ $labels.pod }} en namespace
+                    {{ $labels.namespace }} se está reiniciando
+                    constantemente.
+
+              - alert: DeploymentUnavailable
+                expr: kube_deployment_status_replicas_unavailable > 0
+                for: 5m
+                labels:
+                  severity: critical
+                annotations:
+                  summary: "Deployment {{ $labels.deployment }} no disponible"
+                  description: >-
+                    El deployment {{ $labels.deployment }} tiene
+                    {{ $value }} réplicas no disponibles.
+
+              - alert: PodNotReady
+                expr: >-
+                  kube_pod_status_ready{condition="false"} == 1
+                for: 10m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: "Pod {{ $labels.pod }} no está Ready"
+                  description: >-
+                    El pod {{ $labels.pod }} en namespace
+                    {{ $labels.namespace }} lleva más de 10 minutos
+                    sin estar Ready.
+
+          # CPU y memoria
+          - name: resource-usage
+            rules:
+              - alert: HighCPUUsage
+                expr: >-
+                  sum(rate(container_cpu_usage_seconds_total{
+                    container!=""}[5m])) by (pod, namespace)
+                  / sum(kube_pod_container_resource_limits{
+                    resource="cpu"}) by (pod, namespace) > 0.85
+                for: 10m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: "Alto uso de CPU en {{ $labels.pod }}"
+                  description: >-
+                    El pod {{ $labels.pod }} en namespace
+                    {{ $labels.namespace }} está usando más del
+                    85% de su límite de CPU.
+
+              - alert: HighMemoryUsage
+                expr: >-
+                  sum(container_memory_working_set_bytes{
+                    container!=""}) by (pod, namespace)
+                  / sum(kube_pod_container_resource_limits{
+                    resource="memory"}) by (pod, namespace) > 0.85
+                for: 10m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: "Alto uso de memoria en {{ $labels.pod }}"
+                  description: >-
+                    El pod {{ $labels.pod }} en namespace
+                    {{ $labels.namespace }} está usando más del
+                    85% de su límite de memoria.
+
+              - alert: NodeMemoryPressure
+                expr: kube_node_status_condition{condition="MemoryPressure",status="true"} == 1
+                for: 5m
+                labels:
+                  severity: critical
+                annotations:
+                  summary: "Nodo {{ $labels.node }} bajo presión de memoria"
+                  description: >-
+                    El nodo {{ $labels.node }} está reportando
+                    MemoryPressure.
+
+          # Latencia
+          - name: latency
+            rules:
+              - alert: HighLatency
+                expr: >-
+                  histogram_quantile(0.95,
+                    sum(rate(http_request_duration_seconds_bucket[5m]))
+                    by (le, service, namespace)) > 2
+                for: 10m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: "Alta latencia en {{ $labels.service }}"
+                  description: >-
+                    El servicio {{ $labels.service }} en namespace
+                    {{ $labels.namespace }} tiene p95 de latencia
+                    mayor a 2 segundos.
+
+              - alert: HighErrorRate
+                expr: >-
+                  sum(rate(http_requests_total{status=~"5.."}[5m]))
+                  by (service, namespace)
+                  / sum(rate(http_requests_total[5m]))
+                  by (service, namespace) > 0.05
+                for: 5m
+                labels:
+                  severity: critical
+                annotations:
+                  summary: "Alta tasa de errores en {{ $labels.service }}"
+                  description: >-
+                    El servicio {{ $labels.service }} tiene más del
+                    5% de respuestas 5xx.
+   # ── ALERTMANAGER ──
+  alertmanager:
+    alertmanagerSpec:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 128Mi
+
+
+  # ── GRAFANA ─
+  grafana:
+    adminPassword: "admin123"  # cambiar en producción
+
+    # Sin ingress por ahora — A espera de validación para acceso externo
+    service:
+      type: ClusterIP
+
+    # PVC para dashboards y configuración
+    persistence:
+      enabled: true
+      storageClassName: managed-csi
+      size: 5Gi
+
+    # Retención de sesión
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+
+    # Datasources — Prometheus viene automático
+    # Loki se conecta aquí
+    additionalDataSources:
+      - name: Loki
+        type: loki
+        url: http://monitoring-loki:3100
+        access: proxy
+        isDefault: false
+
+    # Dashboards predefinidos
+    dashboardProviders:
+      dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+          - name: default
+            orgId: 1
+            folder: "Kubernetes"
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/default
+
+    dashboards:
+      default:
+        # CPU y memoria por nodo
+        kubernetes-cluster:
+          gnetId: 7249
+          revision: 1
+          datasource: Prometheus
+
+        # CPU y memoria por pod
+        kubernetes-pods:
+          gnetId: 6781
+          revision: 1
+          datasource: Prometheus
+
+        # Latencia y errores — Nginx
+        nginx-gateway:
+          gnetId: 14314
+          revision: 1
+          datasource: Prometheus
+
+        # Logs via Loki
+        loki-logs:
+          gnetId: 13639
+          revision: 1
+          datasource: Loki
+
+  # ── NODE EXPORTER ──────────────────────────────────────────
+  nodeExporter:
+    enabled: true
+
+  # ── KUBE STATE METRICS ─────────────────────────────────────
+  kubeStateMetrics:
+    enabled: true
+
+# ============================================================
+# LOKI
+# Almacena logs de todos los pods
+# ============================================================
+loki:
+  deploymentMode: SingleBinary  # más simple para dev
+
+  chunksCache:
+    enabled: false # deshabilitar cache en dev
+  resultsCache:
+    enabled: false  # deshabilitar cache en dev
+
+  loki:
+    auth_enabled: false
+
+    schemaConfig:
+      configs:
+        - from: "2024-01-01"
+          store: tsdb
+          object_store: filesystem
+          schema: v13
+          index:
+            prefix: loki_index_
+            period: 24h
+
+    # Retención — 1 día
+    limits_config:
+      retention_period: 24h
+      ingestion_rate_mb: 10
+      ingestion_burst_size_mb: 20
+
+    commonConfig:
+      replication_factor: 1
+
+    storage:
+      type: filesystem  # para dev — en prod se podría Azure Blob
+
+  singleBinary:
+    replicas: 1
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi
+
+    persistence:
+      enabled: true
+      storageClass: managed-csi
+      size: 10Gi
+
+  # Deshabilitar componentes innecesarios para dev
+  read:
+    replicas: 0
+  write:
+    replicas: 0
+  backend:
+    replicas: 0
+
+  gateway:
+    enabled: false
+
+# ============================================================
+# FLUENT BIT
+# Recolecta logs de todos los pods y los envía a Loki
+# ============================================================
+fluent-bit:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+  # Configuración de output hacia Loki
+  config:
+    outputs: |
+      [OUTPUT]
+          Name              loki
+          Match             kube.*
+          Host              monitoring-loki
+          Port              3100
+          Labels            job=fluent-bit
+          Auto_Kubernetes_Labels on
+
+    filters: |
+      [FILTER]
+          Name                kubernetes
+          Match               kube.*
+          Kube_URL            https://kubernetes.default.svc:443
+          Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
+          Merge_Log           On
+          Keep_Log            Off
+          K8S-Logging.Parser  On
+          K8S-Logging.Exclude On
+
+    inputs: |
+      [INPUT]
+          Name              tail
+          Path              /var/log/containers/*.log
+          multiline.parser  docker, cri
+          Tag               kube.*
+          Mem_Buf_Limit     5MB
+          Skip_Long_Lines   On
