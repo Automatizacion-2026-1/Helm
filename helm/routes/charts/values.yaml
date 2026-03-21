@@ -2,8 +2,12 @@ httpRoute:
   kind: HTTPRoute
   metadata:
     name: http-route
+    nameGrafana: http-route-grafana"
     namespace: "frontend"
+    namespaceGrafana: "monitoring"
   nameParentRefs: "frontend-gateway"
   nameService: "frontend-frontend-svc"
+  nameServiceGrafana: "monitoring-grafana"
+  portGrafana: 80
   port: 80
   gatewayNamespace: "gateway-infra" 

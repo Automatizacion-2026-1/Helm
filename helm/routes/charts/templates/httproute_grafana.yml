@@ -1,0 +1,19 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: {{ .Values.httpRoute.kind }}
+metadata:
+  name: {{ .Values.httpRoute.metadata.nameGrafana }}
+  namespace: {{ .Values.httpRoute.metadata.namespaceGrafana }}
+spec:
+  parentRefs:
+    - name: {{ .Values.httpRoute.nameParentRefs }}
+      namespace: {{ .Values.httpRoute.gatewayNamespace }}
+  hostnames:
+  - "monitoring.santiago.monster"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /grafana
+      backendRefs:
+        - name: {{ .Values.httpRoute.nameServiceGrafana }}
+          port: {{ .Values.httpRoute.portGrafana }}
