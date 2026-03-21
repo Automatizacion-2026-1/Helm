@@ -10,7 +10,6 @@ spec:
     - name: {{ .Values.gateway.listeners.name }}
       port: {{ .Values.gateway.listeners.port }}
       protocol: {{ .Values.gateway.listeners.protocol }}
-      hostnames: {{ .Values.gateway.hostnames }}
       allowedRoutes:
         namespaces:
           from: {{ .Values.gateway.listeners.allowedRoutes.namespaces }}
@@ -19,7 +18,6 @@ spec:
     - name: {{ .Values.gateway.listeners.tls.name }}
       port: {{ .Values.gateway.listeners.tls.port }}
       protocol: {{ .Values.gateway.listeners.tls.protocol }}
-      hostnames: {{ .Values.gateway.hostnames }}
       allowedRoutes:
         namespaces:
           from: {{ .Values.gateway.listeners.allowedRoutes.namespaces }}
