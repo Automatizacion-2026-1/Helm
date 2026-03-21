@@ -2,7 +2,7 @@ httpRoute:
   kind: HTTPRoute
   metadata:
     name: http-route
-    nameGrafana: http-route-grafana"
+    nameGrafana: http-route-grafana
     namespace: "frontend"
     namespaceGrafana: "monitoring"
   nameParentRefs: "frontend-gateway"
