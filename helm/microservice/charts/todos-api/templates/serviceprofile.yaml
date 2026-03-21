@@ -1,0 +1,16 @@
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: {{ .Chart.Name }}-{{ .Values.global.namespace }}-svc.{{ .Values.global.namespace }}.svc.cluster.local
+  namespace: {{ .Values.global.namespace }}
+spec:
+  routes:
+    - name: all routes
+      condition:
+        pathRegex: {{ .Values.serviceProfile.pathRegex | quote }}
+      timeout: {{ .Values.serviceProfile.timeout }}
+      isRetryable: {{ .Values.serviceProfile.isRetryable }}
+  retryBudget:
+    retryRatio: {{ .Values.serviceProfile.retryBudget.retryRatio }}
+    minRetriesPerSecond: {{ .Values.serviceProfile.retryBudget.minRetriesPerSecond }}
+    ttl: {{ .Values.serviceProfile.retryBudget.ttl }}
