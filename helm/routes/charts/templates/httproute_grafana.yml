@@ -13,7 +13,7 @@ spec:
     - matches:
         - path:
             type: PathPrefix
-            value: /grafana
+            value: /
       backendRefs:
         - name: {{ .Values.httpRoute.nameServiceGrafana }}
           port: {{ .Values.httpRoute.portGrafana }}
