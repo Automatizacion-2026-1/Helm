@@ -3,11 +3,15 @@ httpRoute:
   metadata:
     name: http-route
     nameGrafana: http-route-grafana
+    nameLinkerd: http-route-linkerd
     namespace: "frontend"
     namespaceGrafana: "monitoring"
+    namespacesLinkerd: "linkerd-viz"
   nameParentRefs: "frontend-gateway"
   nameService: "frontend-frontend-svc"
   nameServiceGrafana: "monitoring-grafana"
+  nameServiceLinkerd: "web"
   portGrafana: 80
   port: 80
+  portLinkerd: 8084
   gatewayNamespace: "gateway-infra" 
