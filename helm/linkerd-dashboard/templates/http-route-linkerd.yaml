@@ -1,12 +1,12 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: {{ .Values.httpRoute.kind }}
 metadata:
-  name: {{ .Values.httpRoute.metadata.nameLinkerd }}
-  namespace: {{ .Values.httpRoute.metadata.namespacesLinkerd }}
+  name: {{ .Values.httpRoute.metadata.name }}
+  namespace: {{ .Values.httpRoute.metadata.namespace }}
 spec:
   parentRefs:
-    - name: {{ .Values.httpRoute.nameParentRefs }}
-      namespace: {{ .Values.httpRoute.gatewayNamespace }}
+    - name: {{ .Values.httpRoute.parentRefs.name }}
+      namespace: {{ .Values.httpRoute.parentRefs.namespace }}
   hostnames:
     - "linkerd.santiago.monster"
   rules:
@@ -15,15 +15,15 @@ spec:
             type: PathPrefix
             value: /oauth2
       backendRefs:
-        - name: {{ .Values.httpRoute.nameServiceOAuth }}
+        - name: {{ .Values.httpRoute.service.name }}
           namespace: linkerd-viz
-          port: {{ .Values.httpRoute.portOAuth }}
+          port: {{ .Values.httpRoute.service.port }}
 
     - matches:
         - path:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: {{ .Values.httpRoute.nameServiceOAuth }}
+        - name: {{ .Values.httpRoute.service.name }}
           namespace: linkerd-viz
-          port: {{ .Values.httpRoute.portOAuth }}
+          port: {{ .Values.httpRoute.service.port }}
