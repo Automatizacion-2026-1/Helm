@@ -1,8 +1,7 @@
 apiVersion: v2
 name: linkerd-dashboard
 description: Linkerd dashboard con OAuth2 Azure Entra ID
-version: 1.0.0
+version: 0.1.0
 dependencies:
   - name: oauth2-proxy
     version: "7.7.5"
-    repository: https://oauth2-proxy.github.io/manifests
