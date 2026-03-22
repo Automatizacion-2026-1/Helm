@@ -8,12 +8,22 @@ spec:
     - name: {{ .Values.httpRoute.nameParentRefs }}
       namespace: {{ .Values.httpRoute.gatewayNamespace }}
   hostnames:
-  - "linkerd.santiago.monster"
+    - "linkerd.santiago.monster"
   rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /oauth2
+      backendRefs:
+        - name: {{ .Values.httpRoute.nameServiceOAuth }}
+          namespace: linkerd-viz
+          port: {{ .Values.httpRoute.portOAuth }}
+
     - matches:
         - path:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: {{ .Values.httpRoute.nameServiceLinkerd }}
-          port: {{ .Values.httpRoute.portLinkerd }}
+        - name: {{ .Values.httpRoute.nameServiceOAuth }}
+          namespace: linkerd-viz
+          port: {{ .Values.httpRoute.portOAuth }}
