@@ -27,11 +27,12 @@ dependencies:
 - name: gateway-infra
   version: 0.2.0
   repository: "file://./gateway-infra/charts"
-
 - name: gateway-controller
   version: 0.1.0
   repository: "file://./gateway-controller/charts"
-
 - name: routes
   version: 0.1.0
   repository: "file://./routes/charts"
+- name: linkerd-dashboard
+  version: 0.1.0
+  repository: "file://./linkerd-dashboard"

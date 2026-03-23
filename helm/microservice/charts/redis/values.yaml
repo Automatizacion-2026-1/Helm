@@ -37,3 +37,13 @@ labels:
 #Linkerd annotations
 annotations:
     linkerd.io/inject: enabled
+
+#ServiceProfile configuration for Linkerd
+serviceProfile:
+  timeout: 5s
+  isRetryable: true
+  pathRegex: ".*"
+  retryBudget:
+    retryRatio: 0.2
+    minRetriesPerSecond: 10
+    ttl: 10s

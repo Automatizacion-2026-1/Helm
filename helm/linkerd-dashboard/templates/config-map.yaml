@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oauth2-proxy-emails
+  namespace: linkerd-viz
+data:
+  emails.txt: |
+    1116070738@u.icesi.edu.co
+    1110285511@u.icesi.edu.co
+    1107836071@u.icesi.edu.co
+    1117349952@u.icesi.edu.co
+    1110284648@u.icesi.edu.co
+    1112038562@u.icesi.edu.co
+    1105362267@u.icesi.edu.co
+    1005897835@u.icesi.edu.co

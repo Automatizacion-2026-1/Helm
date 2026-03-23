@@ -1,0 +1,31 @@
+oauth2-proxy:
+  podAnnotations:
+    linkerd.io/inject: enabled
+  config:
+    existingSecret: oauth2-proxy-secret
+  extraArgs:
+    upstream: http://web.linkerd-viz.svc.cluster.local:8084
+    redirect-url: https://linkerd.santiago.monster/oauth2/callback
+    user-id-claim: preferred_username
+    skip-provider-button: true
+    session-cookie-minimal: true
+
+tenantId: ""                    
+
+httpRoute:
+  kind: HTTPRoute
+  metadata:
+    name: http-route-linkerd
+    namespace: linkerd-viz
+  parentRefs:
+    name: frontend-gateway
+    namespace: gateway-infra
+  hostname: "linkerd.santiago.monster"
+  service:
+    name: oauth2-proxy
+    port: 4180
+
+referenceGrant:
+  name: linkerd-gateway-ref
+  namespace: linkerd-viz
+  fromNamespace: gateway-infra
