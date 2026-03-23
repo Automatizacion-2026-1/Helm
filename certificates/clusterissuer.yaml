@@ -5,14 +5,14 @@ metadata:
 spec:
   acme:
     email: shernandezsaavedra2004@gmail.com
-    server: https://acme-v02.api.letsencrypt.org/directory
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: letsencrypt-account-key
+      name: letsencrypt-account-key-staging
     solvers:
     - dns01:
         cnameStrategy: Follow
         azureDNS:
-          resourceGroup: rg-dev-microservices-eastus2
+          resourceGroupName: rg-dev-microservices-eastus2
           subscriptionID: ${AZURE_SUBSCRIPTION_ID}
           hostedZoneName: certs.santiago.monster
           environment: AzurePublicCloud
