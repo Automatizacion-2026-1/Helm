@@ -1,0 +1,11 @@
+apiVersion: v2
+name: litmus-chaos
+description: LitmusChaos experiments for microservice-app resilience testing
+type: application
+version: 0.1.0
+appVersion: "3.0.0"
+ 
+dependencies:
+  - name: litmus
+    version: "3.26.0"
+    repository: "https://litmuschaos.github.io/litmus-helm/"
