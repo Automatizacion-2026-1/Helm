@@ -7,7 +7,7 @@ oauth2-proxy:
     azure-tenant: ""                    # se pasa en el pipeline
     upstream: http://web.linkerd-viz.svc.cluster.local:8084
     redirect-url: https://linkerd.santiago.monster/oauth2/callback
-    email-domain: "icesi.edu.co"
+    user-id-claim: preferred_username
     skip-provider-button: true
     session-cookie-minimal: true
 

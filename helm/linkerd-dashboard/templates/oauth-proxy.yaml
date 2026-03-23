@@ -20,10 +20,10 @@ spec:
           image: quay.io/oauth2-proxy/oauth2-proxy:latest
           args:
             - --provider=oidc
-            - --oidc-issuer-url="https://login.microsoftonline.com/{{ .Values.tenantId }}/v2.0"
+            - --oidc-issuer-url=https://login.microsoftonline.com/{{ .Values.tenantId }}/v2.0
             - --upstream={{ index .Values "oauth2-proxy" "extraArgs" "upstream" }}
             - --redirect-url={{ index .Values "oauth2-proxy" "extraArgs" "redirect-url" }}
-            - --email-domain={{ index .Values "oauth2-proxy" "extraArgs" "email-domain" }}
+            - --user-id-claim={{ index .Values "oauth2-proxy" "extraArgs" "user-id-claim" }}
             - --authenticated-emails-file=/etc/oauth2-proxy/emails.txt
             - --skip-provider-button={{ index .Values "oauth2-proxy" "extraArgs" "skip-provider-button" }}
             - --session-cookie-minimal={{ index .Values "oauth2-proxy" "extraArgs" "session-cookie-minimal" }}
