@@ -12,7 +12,7 @@ spec:
     - dns01:
         cnameStrategy: Follow
         azureDNS:
-          resourceGroup: ${AZURE_RESOURCE_GROUP}
+          resourceGroup: rg-dev-microservices-eastus2
           subscriptionID: ${AZURE_SUBSCRIPTION_ID}
           hostedZoneName: certs.santiago.monster
           environment: AzurePublicCloud
