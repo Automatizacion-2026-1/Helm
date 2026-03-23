@@ -1,7 +1,7 @@
 # ── PROMETHEUS SERVICE ACCOUNT ──
-apiVersion: v1
-kind: ServiceAccount
-metadata:
+#apiVersion: v1
+#kind: ServiceAccount
+#metadata:
   name: monitoring-prometheus-server
   namespace: monitoring
 
@@ -50,11 +50,11 @@ subjects:
 
 ---
 # ── FLUENT BIT SERVICE ACCOUNT ──
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: monitoring-fluent-bit
-  namespace: monitoring
+#apiVersion: v1
+#kind: ServiceAccount
+#metadata:
+  #name: monitoring-fluent-bit
+  #namespace: monitoring
 
 ---
 # ── FLUENT BIT CLUSTER ROLE ──
