@@ -4,3 +4,6 @@ charts/*.tgz
 # Helm temp files
 *.tmp
 *.bak
+
+#
+.idea/
