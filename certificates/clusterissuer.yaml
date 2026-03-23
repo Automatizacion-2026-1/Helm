@@ -1,21 +1,20 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-dns
+  name: letsencrypt-azure-dns
 spec:
   acme:
     email: shernandezsaavedra2004@gmail.com
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: letsencrypt-dns-key
+      name: letsencrypt-account-key
     solvers:
     - dns01:
-        webhook:
-          groupName: acme.santiago.monster
-          solverName: godaddy
-          config:
-            apiKeySecretRef:
-              name: godaddy-api-key
-              key: token
-            production: true
-            ttl: 600
+        cnameStrategy: Follow
+        azureDNS:
+          resourceGroup: ${AZURE_RESOURCE_GROUP}
+          subscriptionID: ${AZURE_SUBSCRIPTION_ID}
+          hostedZoneName: certs.santiago.monster
+          environment: AzurePublicCloud
+          managedIdentity:
+            clientID: ${AKS_MANAGED_IDENTITY_CLIENT_ID}
