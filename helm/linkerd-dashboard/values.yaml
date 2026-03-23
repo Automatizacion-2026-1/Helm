@@ -4,17 +4,13 @@ oauth2-proxy:
   config:
     existingSecret: oauth2-proxy-secret
   extraArgs:
-    azure-tenant: ""                    # se pasa en el pipeline
     upstream: http://web.linkerd-viz.svc.cluster.local:8084
     redirect-url: https://linkerd.santiago.monster/oauth2/callback
     user-id-claim: preferred_username
     skip-provider-button: true
     session-cookie-minimal: true
 
-secret:
-  clientId: ""                          # se pasa en el pipeline
-  clientSecret: ""                      # se pasa en el pipeline
-  cookieSecret: ""                      # se pasa en el pipeline
+tenantId: ""                    
 
 httpRoute:
   kind: HTTPRoute
