@@ -1,0 +1,64 @@
+{{- if .Values.experiments.nodeDrain.enabled }}
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: node-drain-nodepool
+  namespace: {{ .Values.global.targetNamespace }}
+  labels:
+    app.kubernetes.io/part-of: litmus-chaos
+    experiment: node-drain
+  annotations:
+    argocd.argoproj.io/managed-by: argocd
+spec:
+  # node-drain targets the node, not a specific app
+  # appinfo is required by the CRD but unused for node-level faults
+  appinfo:
+    appns: {{ .Values.global.targetNamespace }}
+    applabel: "app=auth-api"
+    appkind: deployment
+
+  engineState: "active"
+  chaosServiceAccount: {{ .Values.rbac.serviceAccountName }}
+  jobCleanUpPolicy: retain
+
+  components:
+    runner:
+      image: "litmuschaos/chaos-runner:3.0.0"
+
+  experiments:
+    - name: node-drain
+      spec:
+        probe:
+          # Prometheus probe: verify at least 1 replica of each service
+          # is Running throughout the drain
+          - name: "min-replicas-probe"
+            type: "promProbe"
+            promProbe/inputs:
+              endpoint: {{ .Values.global.prometheusEndpoint }}
+              query: >-
+                min(kube_deployment_status_replicas_ready{
+                  namespace="{{ .Values.global.targetNamespace }}"
+                }) > 0
+              comparator:
+                criteria: "=="
+                value: "1"
+            mode: "Continuous"
+            runProperties:
+              probeTimeout: 10000
+              interval: 5000
+              attempt: 5
+              stopOnFailure: false  # record failure but don't abort
+
+        components:
+          env:
+            - name: TOTAL_CHAOS_DURATION
+              value: "{{ .Values.experiments.nodeDrain.totalChaosDuration }}"
+            # Target node selector — AKS labels all nodes in a pool
+            - name: TARGET_NODE
+              value: ""   # empty = random node matching NODE_LABEL
+            - name: NODE_LABEL
+              value: {{ .Values.experiments.nodeDrain.nodeLabel | quote }}
+            # Litmus will kubectl uncordon after the duration
+            - name: DRAIN_TIMEOUT
+              value: "{{ .Values.experiments.nodeDrain.totalChaosDuration }}"
+{{- end }}

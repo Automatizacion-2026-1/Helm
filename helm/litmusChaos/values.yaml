@@ -1,0 +1,72 @@
+litmus:
+  portal:
+    frontend:
+      service:
+        type: ClusterIP   # exposed via HTTPRoute like Grafana
+    server:
+      service:
+        type: ClusterIP
+ 
+  adminConfig:
+    DBPASSWORD: "litmus"   # change in prod via sealed secret
+    DBUSER: "admin"
+ 
+
+global:
+  
+  targetNamespace: microservices
+  
+  litmusNamespace: litmus
+  
+  prometheusEndpoint: "http://monitoring-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090"
+ 
+
+experiments:
+  podDelete:
+    enabled: true
+    
+    appLabel: "auth-api"
+    appNamespace: microservices
+    
+    totalChaosDuration: 30      
+    chaosInterval: 10           
+    force: false                
+    
+    probeUrl: "http://frontend-frontend-aut-aks-svc.frontend.svc.cluster.local:80"
+    probeTimeout: 5000          # ms
+    probeAttempt: 3
+ 
+  nodeDrain:
+    enabled: true
+    
+    nodeLabel: "agentpool=nodepool1"
+    totalChaosDuration: 60
+    
+ 
+  networkLoss:
+    enabled: true
+    
+    appLabel: "todos-api"
+    appNamespace: microservices
+    networkInterface: "eth0"
+    lossPercentage: "50"       
+    totalChaosDuration: 60
+    
+ 
+
+rbac:
+ 
+  serviceAccountName: litmus-chaos-admin
+ 
+
+audit:
+ 
+  enabled: true
+ 
+
+monitoring:
+  serviceMonitor:
+    enabled: false
+    
+    labels:
+      release: monitoring
