@@ -33,7 +33,7 @@ experiments:
     force: false                
     
     probeUrl: "http://frontend-frontend-aut-aks-svc.frontend.svc.cluster.local:80"
-    probeTimeout: 5000          # ms
+    probeTimeout: 5000       
     probeAttempt: 3
  
   nodeDrain:

@@ -46,7 +46,7 @@ spec:
             runProperties:
               probeTimeout: "10000"
               interval: "5000"
-              attempt: "5"
+              attempt: 5
               stopOnFailure: false  # record failure but don't abort
 
         components:
