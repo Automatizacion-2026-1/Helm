@@ -42,7 +42,7 @@ spec:
                   responseCode: "200"
             mode: "Continuous"
             runProperties:
-              probeTimeout: {{ .Values.experiments.podDelete.probeTimeout }}
+              probeTimeout: "{{ .Values.experiments.podDelete.probeTimeout }}"
               interval: "2000"
               attempt: {{ .Values.experiments.podDelete.probeAttempt }}
               stopOnFailure: true   
