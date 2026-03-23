@@ -4,14 +4,12 @@ oauth2-proxy:
   config:
     existingSecret: oauth2-proxy-secret
   extraArgs:
-    provider: azure
     azure-tenant: ""                    # se pasa en el pipeline
-    allowed-group: ""                   # se pasa en el pipeline
     upstream: http://web.linkerd-viz.svc.cluster.local:8084
     redirect-url: https://linkerd.santiago.monster/oauth2/callback
-    email-domain: "*"
+    email-domain: "icesi.edu.co"
     skip-provider-button: true
-    cookie-secure: true
+    session-cookie-minimal: true
 
 secret:
   clientId: ""                          # se pasa en el pipeline
