@@ -1,0 +1,64 @@
+{{- if .Values.experiments.networkLoss.enabled }}
+
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: network-loss-todos-api
+  namespace: {{ .Values.global.targetNamespace }}
+  labels:
+    app.kubernetes.io/part-of: litmus-chaos
+    experiment: network-loss
+    target: todos-api
+  annotations:
+    argocd.argoproj.io/managed-by: argocd
+spec:
+  appinfo:
+    appns: {{ .Values.experiments.networkLoss.appNamespace }}
+    applabel: "app={{ .Values.experiments.networkLoss.appLabel }}"
+    appkind: deployment
+
+  engineState: "active"
+  chaosServiceAccount: {{ .Values.rbac.serviceAccountName }}
+  jobCleanUpPolicy: retain
+
+  components:
+    runner:
+      image: "litmuschaos/chaos-runner:3.0.0"
+
+  experiments:
+    - name: pod-network-loss
+      spec:
+        probe:
+          # HTTP probe: todos-api service must still respond (with retries)
+          - name: "todos-api-liveness-probe"
+            type: "httpProbe"
+            httpProbe/inputs:
+              url: "http://microservices-todos-api-svc.{{ .Values.global.targetNamespace }}.svc.cluster.local:8082"
+              insecureSkipVerify: false
+              method:
+                get:
+                  criteria: "!="
+                  responseCode: "500"   
+            mode: "EOT"   # End-of-Test: probe runs after chaos ends
+            runProperties:
+              probeTimeout: 10000
+              interval: 3000
+              attempt: 5
+              stopOnFailure: false
+
+        components:
+          env:
+            - name: TOTAL_CHAOS_DURATION
+              value: "{{ .Values.experiments.networkLoss.totalChaosDuration }}"
+            - name: NETWORK_INTERFACE
+              value: {{ .Values.experiments.networkLoss.networkInterface | quote }}
+            - name: LOSS_PERCENTAGE
+              value: {{ .Values.experiments.networkLoss.lossPercentage | quote }}
+            # Scope: only affect egress from todos-api to Redis
+            - name: DESTINATION_IPS
+              value: ""   # empty = all egress (wider blast radius test)
+            - name: DESTINATION_HOSTS
+              value: "microservices-redis-svc.{{ .Values.global.targetNamespace }}.svc.cluster.local"
+            - name: PODS_AFFECTED_PERC
+              value: "100"
+{{- end }}

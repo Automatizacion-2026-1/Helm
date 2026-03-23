@@ -1,0 +1,63 @@
+{{- if .Values.experiments.podDelete.enabled }}
+
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: pod-delete-auth-api
+  namespace: {{ .Values.global.targetNamespace }}
+  labels:
+    app.kubernetes.io/part-of: litmus-chaos
+    experiment: pod-delete
+    target: auth-api
+  annotations:
+    # ArgoCD will track this resource and show its health
+    argocd.argoproj.io/managed-by: argocd
+spec:
+  appinfo:
+    appns: {{ .Values.experiments.podDelete.appNamespace }}
+    applabel: "app={{ .Values.experiments.podDelete.appLabel }}"
+    appkind: deployment
+
+  engineState: "active"
+  chaosServiceAccount: {{ .Values.rbac.serviceAccountName }}
+
+  jobCleanUpPolicy: retain  
+
+  components:
+    runner:
+      image: "litmuschaos/chaos-runner:3.0.0"
+
+  experiments:
+    - name: pod-delete
+      spec:
+        probe:
+          - name: "frontend-availability-probe"
+            type: "httpProbe"
+            httpProbe/inputs:
+              url: {{ .Values.experiments.podDelete.probeUrl }}
+              insecureSkipVerify: false
+              method:
+                get:
+                  criteria: "=="
+                  responseCode: "200"
+            mode: "Continuous"
+            runProperties:
+              probeTimeout: {{ .Values.experiments.podDelete.probeTimeout }}
+              interval: 2000
+              attempt: {{ .Values.experiments.podDelete.probeAttempt }}
+              stopOnFailure: true   
+
+        components:
+          env:
+            - name: TOTAL_CHAOS_DURATION
+              value: "{{ .Values.experiments.podDelete.totalChaosDuration }}"
+            - name: CHAOS_INTERVAL
+              value: "{{ .Values.experiments.podDelete.chaosInterval }}"
+            - name: FORCE
+              value: "{{ .Values.experiments.podDelete.force }}"
+            
+            - name: TARGET_PODS
+              value: ""   
+            - name: PODS_AFFECTED_PERC
+              value: "100"  
+{{- end }}
