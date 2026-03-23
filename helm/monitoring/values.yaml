@@ -257,16 +257,16 @@ grafana:
   dashboards:
     default:
       kubernetes-cluster:
-        gnetId: 7249
-        revision: 1
+        gnetId: 315
+        revision: 3
         datasource: Prometheus
       kubernetes-pods:
-        gnetId: 6781
-        revision: 1
+        gnetId: 747
+        revision: 2
         datasource: Prometheus
-      nginx-gateway:
-        gnetId: 14314
-        revision: 1
+      node-exporter:
+        gnetId: 1816
+        revision: 37
         datasource: Prometheus
       loki-logs:
         gnetId: 13639
@@ -342,12 +342,13 @@ fluent-bit:
   config:
     outputs: |
       [OUTPUT]
-          Name              loki
-          Match             kube.*
-          Host              monitoring-loki
-          Port              3100
-          Labels            job=fluent-bit
-          Auto_Kubernetes_Labels on
+          Name                    loki
+          Match                   kube.*
+          Host                    monitoring-loki
+          Port                    3100
+          Labels                  job=fluent-bit
+          Label_Keys              $kubernetes['namespace_name'], $kubernetes['pod_name'], $kubernetes['container_name']
+          Auto_Kubernetes_Labels  on
 
     filters: |
       [FILTER]
