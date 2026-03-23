@@ -1,0 +1,86 @@
+# ── PROMETHEUS SERVICE ACCOUNT ──
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: monitoring-prometheus-server
+  namespace: monitoring
+
+---
+# ── PROMETHEUS CLUSTER ROLE ──
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: monitoring-rbac
+rules:
+  - apiGroups: [""]
+    resources:
+      - nodes
+      - nodes/metrics
+      - nodes/proxy
+      - nodes/stats
+      - services
+      - endpoints
+      - pods
+      - persistentvolumeclaims
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["extensions", "networking.k8s.io"]
+    resources: ["ingresses"]
+    verbs: ["get", "list", "watch"]
+  - nonResourceURLs:
+      - /metrics
+      - /healthz
+      - /readyz
+      - /livez
+    verbs: ["get"]
+
+---
+# ── PROMETHEUS CLUSTER ROLE BINDING ──
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: monitoring-rbac
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: monitoring-rbac
+subjects:
+  - kind: ServiceAccount
+    name: monitoring-prometheus-server
+    namespace: monitoring
+
+---
+# ── FLUENT BIT SERVICE ACCOUNT ──
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: monitoring-fluent-bit
+  namespace: monitoring
+
+---
+# ── FLUENT BIT CLUSTER ROLE ──
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: fluent-bit-rbac
+rules:
+  - apiGroups: [""]
+    resources:
+      - namespaces
+      - pods
+      - nodes
+    verbs: ["get", "list", "watch"]
+
+---
+# ── FLUENT BIT CLUSTER ROLE BINDING ──
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: fluent-bit-rbac
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: fluent-bit-rbac
+subjects:
+  - kind: ServiceAccount
+    name: monitoring-fluent-bit
+    namespace: monitoring

@@ -1,46 +1,73 @@
 # ============================================================
-# KUBE-PROMETHEUS-STACK
-# Includes: Prometheus, Grafana, AlertManager, node-exporter
+# PROMETHEUS STANDALONE
+# Includes: Prometheus, AlertManager, node-exporter,
+# kube-state-metrics
 # ============================================================
-kube-prometheus-stack:
+prometheus:
+  # ── SERVER ──
+  server:
+    retention: "1d"
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 300m
+        memory: 512Mi
+    persistentVolume:
+      enabled: true
+      storageClass: "default"
+      size: 10Gi
+    global:
+      scrape_interval: 30s
+      evaluation_interval: 30s
 
-  # ── PROMETHEUS ──
-  prometheus:
-    prometheusSpec:
-      # Retención de métricas — 1 días
-      retention: 1d
-      retentionSize: "5GB"
-      podMetadata:
-        annotations:
-          linkerd.io/inject: enabled  # Para monitorear servicios Linkerd
-      # Recursos (Estos valores son temporales y sujetos a cambios según capacidad del cluster)
-      resources:
-        requests:
-          cpu: 100m
-          memory: 265Mi
-        limits:
-          cpu: 300m
-          memory: 512Mi #Se puede modificar según necesidades
+  # ── ALERTMANAGER ──
+  alertmanager:
+    enabled: true
+    config:
+      global:
+        smtp_smarthost: "smtp.gmail.com:587"
+        smtp_from: ""
+        smtp_auth_username: ""
+        smtp_auth_password: ""
+        smtp_require_tls: true
+      route:
+        group_by: ["alertname", "namespace"]
+        group_wait: 30s
+        group_interval: 5m
+        repeat_interval: 12h
+        receiver: "email-alerts"
+        routes:
+          - matchers:
+              - "severity = critical"
+            receiver: "email-alerts"
+            group_wait: 10s
+            repeat_interval: 1h
+          - matchers:
+              - "severity = warning"
+            receiver: "email-alerts"
+            group_wait: 1m
+            repeat_interval: 4h
+      receivers:
+        - name: "email-alerts"
+          email_configs:
+            - to: ""
+              send_resolved: true
+    persistentVolume:
+      enabled: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
 
-      # PVC para métricas
-      storageSpec:
-        volumeClaimTemplate:
-          spec:
-            storageClassName: default  # Azure Disk en AKS (cambiado a default para testeo)
-            accessModes: ["ReadWriteOnce"]
-            resources:
-              requests:
-                storage: 10Gi # Puede modificarse
-
-      # Scraping de todos los namespaces
-      podMonitorSelectorNilUsesHelmValues: false
-      serviceMonitorSelectorNilUsesHelmValues: false
-      ruleSelectorNilUsesHelmValues: false
-
-  additionalPrometheusRulesMap:   # ── ALERTAS PERSONALIZADAS ──
-    custom-alerts:
+  # ── ALERTAS PERSONALIZADAS ──
+  serverFiles:
+    alerting_rules.yml:
       groups:
-        # Caída de servicios
         - name: service-availability
           rules:
             - alert: PodCrashLooping
@@ -54,7 +81,6 @@ kube-prometheus-stack:
                   El pod {{ $labels.pod }} en namespace
                   {{ $labels.namespace }} se está reiniciando
                   constantemente.
-
             - alert: DeploymentUnavailable
               expr: kube_deployment_status_replicas_unavailable > 0
               for: 5m
@@ -65,7 +91,6 @@ kube-prometheus-stack:
                 description: >-
                   El deployment {{ $labels.deployment }} tiene
                   {{ $value }} réplicas no disponibles.
-
             - alert: PodNotReady
               expr: >-
                 kube_pod_status_ready{condition="false"} == 1
@@ -78,8 +103,6 @@ kube-prometheus-stack:
                   El pod {{ $labels.pod }} en namespace
                   {{ $labels.namespace }} lleva más de 10 minutos
                   sin estar Ready.
-
-        # CPU y memoria
         - name: resource-usage
           rules:
             - alert: HighCPUUsage
@@ -97,7 +120,6 @@ kube-prometheus-stack:
                   El pod {{ $labels.pod }} en namespace
                   {{ $labels.namespace }} está usando más del
                   85% de su límite de CPU.
-
             - alert: HighMemoryUsage
               expr: >-
                 sum(container_memory_working_set_bytes{
@@ -113,9 +135,10 @@ kube-prometheus-stack:
                   El pod {{ $labels.pod }} en namespace
                   {{ $labels.namespace }} está usando más del
                   85% de su límite de memoria.
-
             - alert: NodeMemoryPressure
-              expr: kube_node_status_condition{condition="MemoryPressure",status="true"} == 1
+              expr: >-
+                kube_node_status_condition{
+                  condition="MemoryPressure",status="true"} == 1
               for: 5m
               labels:
                 severity: critical
@@ -124,8 +147,6 @@ kube-prometheus-stack:
                 description: >-
                   El nodo {{ $labels.node }} está reportando
                   MemoryPressure.
-
-        # Latencia
         - name: latency
           rules:
             - alert: HighLatency
@@ -142,7 +163,6 @@ kube-prometheus-stack:
                   El servicio {{ $labels.service }} en namespace
                   {{ $labels.namespace }} tiene p95 de latencia
                   mayor a 2 segundos.
-
             - alert: HighErrorRate
               expr: >-
                 sum(rate(http_requests_total{status=~"5.."}[5m]))
@@ -157,113 +177,113 @@ kube-prometheus-stack:
                 description: >-
                   El servicio {{ $labels.service }} tiene más del
                   5% de respuestas 5xx.
-   # ── ALERTMANAGER ──
-  alertmanager:
-    alertmanagerSpec:
-      resources:
-        requests:
-          cpu: 50m
-          memory: 64Mi
-        limits:
-          cpu: 100m
-          memory: 128Mi
 
-
-  # ── GRAFANA ─
-  grafana:
-    adminPassword: "admin123"  # cambiar en producción
-
-    # Sin ingress por ahora — A espera de validación para acceso externo
-    service:
-      type: ClusterIP
-
-    # PVC para dashboards y configuración
-    persistence:
-      enabled: true
-      storageClassName: managed-csi
-      size: 5Gi
-
-    # Retención de sesión
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        cpu: 200m
-        memory: 256Mi
-
-    # Datasources — Prometheus viene automático
-    # Loki se conecta aquí
-    additionalDataSources:
-      - name: Loki
-        type: loki
-        url: http://monitoring-loki:3100
-        access: proxy
-        isDefault: false
-
-    # Dashboards predefinidos
-    dashboardProviders:
-      dashboardproviders.yaml:
-        apiVersion: 1
-        providers:
-          - name: default
-            orgId: 1
-            folder: "Kubernetes"
-            type: file
-            disableDeletion: false
-            editable: true
-            options:
-              path: /var/lib/grafana/dashboards/default
-
-    dashboards:
-      default:
-        # CPU y memoria por nodo
-        kubernetes-cluster:
-          gnetId: 7249
-          revision: 1
-          datasource: Prometheus
-
-        # CPU y memoria por pod
-        kubernetes-pods:
-          gnetId: 6781
-          revision: 1
-          datasource: Prometheus
-
-        # Latencia y errores — Nginx
-        nginx-gateway:
-          gnetId: 14314
-          revision: 1
-          datasource: Prometheus
-
-        # Logs via Loki
-        loki-logs:
-          gnetId: 13639
-          revision: 1
-          datasource: Loki
-
-  # ── NODE EXPORTER ──────────────────────────────────────────
+  # ── NODE EXPORTER ──
   nodeExporter:
     enabled: true
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        cpu: 50m
+        memory: 64Mi
 
-  # ── KUBE STATE METRICS ─────────────────────────────────────
-  kubeStateMetrics:
+  # ── KUBE STATE METRICS ──
+  kube-state-metrics:
     enabled: true
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        cpu: 50m
+        memory: 64Mi
+
+  # ── PUSHGATEWAY ──
+  pushgateway:
+    enabled: false
+
+# ============================================================
+# GRAFANA
+# ============================================================
+grafana:
+  adminPassword: "admin123"
+
+  service:
+    type: ClusterIP
+
+  persistence:
+    enabled: false
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          url: http://monitoring-prometheus-server
+          access: proxy
+          isDefault: true
+        - name: Loki
+          type: loki
+          url: http://monitoring-loki:3100
+          access: proxy
+          isDefault: false
+
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: default
+          orgId: 1
+          folder: "Kubernetes"
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/default
+
+  dashboards:
+    default:
+      kubernetes-cluster:
+        gnetId: 7249
+        revision: 1
+        datasource: Prometheus
+      kubernetes-pods:
+        gnetId: 6781
+        revision: 1
+        datasource: Prometheus
+      nginx-gateway:
+        gnetId: 14314
+        revision: 1
+        datasource: Prometheus
+      loki-logs:
+        gnetId: 13639
+        revision: 1
+        datasource: Loki
 
 # ============================================================
 # LOKI
-# Almacena logs de todos los pods
 # ============================================================
 loki:
-  deploymentMode: SingleBinary  # más simple para dev
+  deploymentMode: SingleBinary
 
   chunksCache:
-    enabled: false # deshabilitar cache en dev
+    enabled: false
   resultsCache:
-    enabled: false  # deshabilitar cache en dev
+    enabled: false
 
   loki:
     auth_enabled: false
-
     schemaConfig:
       configs:
         - from: "2024-01-01"
@@ -273,48 +293,40 @@ loki:
           index:
             prefix: loki_index_
             period: 24h
-
-    # Retención — 1 día
     limits_config:
       retention_period: 24h
       ingestion_rate_mb: 10
       ingestion_burst_size_mb: 20
-
     commonConfig:
       replication_factor: 1
-
     storage:
-      type: filesystem  # para dev — en prod se podría Azure Blob
+      type: filesystem
 
   singleBinary:
     replicas: 1
     resources:
       requests:
         cpu: 100m
-        memory: 256Mi
+        memory: 128Mi
       limits:
         cpu: 200m
-        memory: 512Mi
-
+        memory: 256Mi
     persistence:
       enabled: true
-      storageClass: managed-csi
-      size: 10Gi
+      storageClass: "default"
+      size: 5Gi
 
-  # Deshabilitar componentes innecesarios para dev
   read:
     replicas: 0
   write:
     replicas: 0
   backend:
     replicas: 0
-
   gateway:
     enabled: false
 
 # ============================================================
 # FLUENT BIT
-# Recolecta logs de todos los pods y los envía a Loki
 # ============================================================
 fluent-bit:
   resources:
@@ -325,7 +337,6 @@ fluent-bit:
       cpu: 100m
       memory: 128Mi
 
-  # Configuración de output hacia Loki
   config:
     outputs: |
       [OUTPUT]
