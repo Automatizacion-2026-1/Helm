@@ -265,11 +265,11 @@ grafana:
         revision: 2
         datasource: Prometheus
       node-exporter:
-        gnetId: 1816
+        gnetId: 1860
         revision: 37
         datasource: Prometheus
       loki-logs:
-        gnetId: 13639
+        gnetId: 13639  #15141
         revision: 1
         datasource: Loki
 
@@ -349,6 +349,7 @@ fluent-bit:
           Labels                  job=fluent-bit
           Label_Keys              $kubernetes['namespace_name'], $kubernetes['pod_name'], $kubernetes['container_name']
           Auto_Kubernetes_Labels  on
+          Remove_Keys              kubernetes,stream
 
     filters: |
       [FILTER]
