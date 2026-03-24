@@ -2,7 +2,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.global.namespace  }}-{{ .Chart.Name }}
+  # CAMBIO: Usamos Release.Name para consistencia con ArgoCD
+  name: {{ printf "%s-%s" .Release.Name .Chart.Name }}
   namespace: {{ .Values.global.namespace }}
   labels:
     app: {{ .Values.labels.app }}
@@ -35,7 +36,8 @@ spec:
             memory: {{ .Values.resources.limits.memory }}
         envFrom:
         - configMapRef:
-            name: {{ .Values.global.namespace }}-{{ .Chart.Name }}-config
+            # CAMBIO: Nombre dinámico consistente
+            name: {{ printf "%s-%s-config" .Release.Name .Chart.Name }}
         - secretRef:
-            name: {{ .Values.global.namespace }}-{{ .Chart.Name }}-secret
-        
+            # CAMBIO: Nombre dinámico consistente
+            name: {{ printf "%s-%s-secret" .Release.Name .Chart.Name }}

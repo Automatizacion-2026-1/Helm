@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.global.namespace }}-{{ .Chart.Name }}-config
+  name: {{ printf "%s-%s-config" .Release.Name .Chart.Name }}
   namespace: {{ .Values.global.namespace }}
   labels:
     app: {{ .Values.labels.app }}

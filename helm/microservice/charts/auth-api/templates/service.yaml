@@ -1,8 +1,7 @@
-# Service para Auth API
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.global.namespace }}-{{ .Chart.Name }}-svc
+  name: {{ printf "%s-%s-svc" .Release.Name .Chart.Name }}
   namespace: {{ .Values.global.namespace }}
   labels:
     app: {{ .Values.labels.app }}
