@@ -1,9 +1,10 @@
 litmus:
-  portal:
-    frontend:
-      enabled: false
-    server:
-      enabled: false
+  frontend:
+    replicas: 0
+
+  server:
+    replicas: 0
+
   mongodb:
     enabled: false
 
