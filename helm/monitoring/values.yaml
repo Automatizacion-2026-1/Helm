@@ -261,8 +261,8 @@ grafana:
         revision: 3
         datasource: Prometheus
       kubernetes-pods:
-        gnetId: 747
-        revision: 2
+        gnetId: 3146
+        revision: 1
         datasource: Prometheus
       node-exporter:
         gnetId: 1860
@@ -347,7 +347,6 @@ fluent-bit:
           Host                    monitoring-loki
           Port                    3100
           Labels                  job=fluent-bit
-          Label_Keys              $kubernetes['namespace_name'], $kubernetes['pod_name'], $kubernetes['container_name']
           Auto_Kubernetes_Labels  on
           Remove_Keys              kubernetes,stream
 
