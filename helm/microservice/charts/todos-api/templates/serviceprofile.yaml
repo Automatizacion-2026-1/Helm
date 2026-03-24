@@ -1,8 +1,9 @@
 apiVersion: linkerd.io/v1alpha2
 kind: ServiceProfile
 metadata:
-  name: {{ .Chart.Name }}-{{ .Values.global.namespace }}-svc.{{ .Values.global.namespace }}.svc.cluster.local
-  namespace: {{ .Values.global.namespace }}
+  # CAMBIO: El nombre debe coincidir con el FQDN del nuevo Service
+  name: {{ printf "%s-%s-svc.%s.svc.cluster.local" .Release.Name .Chart.Name .Values.global.namespace | quote }}
+  namespace: {{ .Values.global.namespace | quote }}
 spec:
   routes:
     - name: all routes

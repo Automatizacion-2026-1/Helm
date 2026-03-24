@@ -2,14 +2,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.global.namespace }}-{{ .Chart.Name }}-svc
-  namespace: {{ .Values.global.namespace }}
+  # CAMBIO: Usamos Release.Name
+  name: {{ printf "%s-%s-svc" .Release.Name .Chart.Name | quote }}
+  namespace: {{ .Values.global.namespace | quote }}
   labels:
-    app: {{ .Values.labels.app }}
+    app: {{ .Values.labels.app | quote }}
 spec:
   type: ClusterIP
   selector:
-    app: {{ .Values.labels.app }}
+    app: {{ .Values.labels.app | quote }}
   ports:
   - port: 8080
     targetPort: 8080
