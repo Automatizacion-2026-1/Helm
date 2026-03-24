@@ -1,16 +1,11 @@
 litmus:
   portal:
     frontend:
-      service:
-        type: ClusterIP   # exposed via HTTPRoute like Grafana
+      enabled: false
     server:
-      service:
-        type: ClusterIP
- 
-  adminConfig:
-    DBPASSWORD: "litmus"   # change in prod via sealed secret
-    DBUSER: "admin"
- 
+      enabled: false
+  mongodb:
+    enabled: false
 
 global:
   
