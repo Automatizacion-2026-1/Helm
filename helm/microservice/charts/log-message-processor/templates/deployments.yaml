@@ -2,23 +2,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.global.namespace }}-{{ .Chart.Name }}
-  namespace: {{ .Values.global.namespace }}
+  # CAMBIO: Usamos Release.Name
+  name: {{ printf "%s-%s" .Release.Name .Chart.Name | quote }}
+  namespace: {{ .Values.global.namespace | quote }}
   labels:
-    app: {{ .Values.labels.app }}
+    app: {{ .Values.labels.app | quote }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.labels.app }}
+      app: {{ .Values.labels.app | quote }}
   template:
     metadata:
       annotations:
-          {{- with .Values.annotations }}
-          {{ toYaml . | indent 8 }}
-          {{- end }}
+        {{- with .Values.annotations }}
+        {{ toYaml . | nindent 8 }}
+        {{- end }}
       labels:
-        app: {{ .Values.labels.app }}
+        app: {{ .Values.labels.app | quote }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
@@ -33,4 +34,5 @@ spec:
             memory: {{ .Values.resources.limits.memory }}
         envFrom:
         - configMapRef:
-            name: {{ .Release.Name }}-{{ .Chart.Name }}-config
+            # CAMBIO: Mismo nombre del ConfigMap
+            name: {{ printf "%s-%s-config" .Release.Name .Chart.Name | quote }}
