@@ -6,24 +6,6 @@ version: 0.1.0
 appVersion: "1.0.0"
 
 dependencies:
-- name: frontend
-  version: 0.2.0
-  repository: file://./frontend/charts
-- name: auth-api
-  version: 0.1.0
-  repository: file://./microservice/charts/auth-api
-- name: log-message-processor
-  version: 0.1.0
-  repository: file://./microservice/charts/log-message-processor
-- name: redis
-  version: 0.1.0
-  repository: file://./microservice/charts/redis
-- name: todos-api
-  version: 0.1.0
-  repository: file://./microservice/charts/todos-api
-- name: users-api
-  version: 0.1.0
-  repository: file://./microservice/charts/users-api
 - name: gateway-infra
   version: 0.2.0
   repository: "file://./gateway-infra/charts"
