@@ -3,7 +3,7 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Release.Name }}-{{ .Chart.Name }}-hpa
+  name: {{ printf "%s-%s-hpa" .Release.Name .Chart.Name | quote }}
   namespace: {{ .Values.global.namespace }}
   labels:
     app: {{ .Values.labels.app }}

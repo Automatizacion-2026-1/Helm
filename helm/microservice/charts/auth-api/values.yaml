@@ -3,7 +3,7 @@ global:
 # Configuración del ConfigMap
 config:
   authApiPort: "8081"
-  usersApiAddress: "http://microservices-users-api-svc.microservices.svc.cluster.local:8083"
+  usersApiAddress: "http://users-api-users-api-svc.microservices.svc.cluster.local:8083"
 # Configuración de la imagen
 image:
   repository: acrdevmicroservices2026.azurecr.io/auth-api
