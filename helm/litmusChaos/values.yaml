@@ -1,13 +1,3 @@
-litmus:
-  frontend:
-    replicas: 0
-
-  server:
-    replicas: 0
-
-  mongodb:
-    enabled: false
-
 global:
   
   targetNamespace: microservices
