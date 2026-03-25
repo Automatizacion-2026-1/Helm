@@ -4,13 +4,13 @@ global:
 # Configuración del ConfigMap
 config:
   # Configuración de Redis para Pub/Sub
-  redisHost: "microservices-redis-svc.microservices.svc.cluster.local"
+  redisHost: "redis-redis-svc.microservices.svc.cluster.local"
   redisPort: "6379"
   redisChannel: "log_channel"
 # Configuración de la imagen
 image:
   repository: acrdevmicroservices2026.azurecr.io/log-message-processor
-  tag: "v1.0.3"
+  tag: "v1.0.4"
   pullPolicy: IfNotPresent
 # Recursos del contenedor
 resources:

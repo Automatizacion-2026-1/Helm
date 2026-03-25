@@ -23,7 +23,7 @@ spec:
 
   components:
     runner:
-      image: "litmuschaos/chaos-runner:3.0.0"
+      image: "litmuschaos/chaos-runner:3.26.0"
 
   experiments:
     - name: pod-network-loss
@@ -41,9 +41,9 @@ spec:
                   responseCode: "500"   
             mode: "EOT"   # End-of-Test: probe runs after chaos ends
             runProperties:
-              probeTimeout: "10000"
-              interval: "3000"
-              attempt: 5
+              probeTimeout: "10s"
+              interval: "3s"
+              attempt: 10
               stopOnFailure: false
 
         components:

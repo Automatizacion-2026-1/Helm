@@ -25,7 +25,7 @@ spec:
 
   components:
     runner:
-      image: "litmuschaos/chaos-runner:3.0.0"
+      image: "litmuschaos/chaos-runner:3.26.0"
 
   experiments:
     - name: pod-delete
@@ -43,7 +43,7 @@ spec:
             mode: "Continuous"
             runProperties:
               probeTimeout: "{{ .Values.experiments.podDelete.probeTimeout }}"
-              interval: "2000"
+              interval: "2s"
               attempt: {{ .Values.experiments.podDelete.probeAttempt }}
               stopOnFailure: true   
 
