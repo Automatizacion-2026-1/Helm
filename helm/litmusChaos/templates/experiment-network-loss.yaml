@@ -23,7 +23,7 @@ spec:
 
   components:
     runner:
-      image: "litmuschaos/chaos-runner:3.0.0"
+      image: "litmuschaos/chaos-runner:3.26.0"
 
   experiments:
     - name: pod-network-loss
