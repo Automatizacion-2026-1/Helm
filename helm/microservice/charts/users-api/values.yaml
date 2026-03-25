@@ -7,7 +7,7 @@ config:
 # Configuración de la imagen
 image:
   repository: acrdevmicroservices2026.azurecr.io/users-api
-  tag: "v1.0.2"
+  tag: "v1.0.3"
   pullPolicy: IfNotPresent
 # Configuración del servicio
 service:
@@ -36,7 +36,6 @@ labels:
 #Linkerd annotations
 annotations:
   linkerd.io/inject: enabled
-
 #ServiceProfile configuration for Linkerd
 serviceProfile:
   timeout: 5s
@@ -46,4 +45,3 @@ serviceProfile:
     retryRatio: 0.2
     minRetriesPerSecond: 10
     ttl: 10s
-
