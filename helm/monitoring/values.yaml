@@ -256,14 +256,6 @@ grafana:
 
   dashboards:
     default:
-      kubernetes-cluster:
-        gnetId: 315
-        revision: 3
-        datasource: Prometheus
-      kubernetes-pods:
-        gnetId: 3146
-        revision: 1
-        datasource: Prometheus
       node-exporter:
         gnetId: 1860
         revision: 37
