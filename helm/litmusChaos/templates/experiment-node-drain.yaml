@@ -44,8 +44,8 @@ spec:
                 value: "1"
             mode: "Continuous"
             runProperties:
-              probeTimeout: "10000"
-              interval: "5000"
+              probeTimeout: "10s"
+              interval: "5s"
               attempt: 5
               stopOnFailure: false  # record failure but don't abort
 

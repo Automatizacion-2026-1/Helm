@@ -19,14 +19,14 @@ experiments:
     force: false                
     
     probeUrl: "http://frontend-frontend-aut-aks-svc.frontend.svc.cluster.local:80"
-    probeTimeout: 5000       
+    probeTimeout: 5s       
     probeAttempt: 3
  
   nodeDrain:
     enabled: true
     
     nodeLabel: "agentpool=nodepool1"
-    totalChaosDuration: 60
+    totalChaosDuration: 120
     
  
   networkLoss:
