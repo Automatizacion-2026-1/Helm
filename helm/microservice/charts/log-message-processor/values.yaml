@@ -4,7 +4,7 @@ global:
 # Configuración del ConfigMap
 config:
   # Configuración de Redis para Pub/Sub
-  redisHost: "microservices-redis-svc.microservices.svc.cluster.local"
+  redisHost: "redis-svc-redis-svc.microservices.svc.cluster.local"
   redisPort: "6379"
   redisChannel: "log_channel"
 # Configuración de la imagen
