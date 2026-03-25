@@ -32,8 +32,8 @@ labels:
   tier: presentation
 config:
   port: "80"
-  authAddress: "http://auth-api-svc-auth-api-svc.microservices.svc.cluster.local:8081"
-  todosAddress: "http://todos-api-svc-todos-api-svc.microservices.svc.cluster.local:8082"
+  authAddress: "http://auth-api-auth-api-svc.microservices.svc.cluster.local:8081"
+  todosAddress: "http://todos-api-todos-api-svc.microservices.svc.cluster.local:8082"
 #Linkerd annotations
 annotations:
   linkerd.io/inject: enabled
