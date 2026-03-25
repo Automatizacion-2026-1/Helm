@@ -1,0 +1,47 @@
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosExperiment
+metadata:
+  name: pod-delete
+  namespace: {{ .Values.experiments.podDelete.appNamespace }}
+  labels:
+    app.kubernetes.io/part-of: litmus-chaos
+spec:
+  definition:
+    scope: Namespaced
+    permissions:
+      - apiGroups: [""]
+        resources: ["pods"]
+        verbs: ["create","delete","get","list","patch","update","deletecollection"]
+      - apiGroups: [""]
+        resources: ["events"]
+        verbs: ["create","get","list","patch","update"]
+      - apiGroups: [""]
+        resources: ["configmaps"]
+        verbs: ["get","list"]
+      - apiGroups: ["apps"]
+        resources: ["deployments","replicasets","statefulsets","daemonsets"]
+        verbs: ["get","list"]
+      - apiGroups: ["litmuschaos.io"]
+        resources: ["chaosengines","chaosexperiments","chaosresults"]
+        verbs: ["create","delete","get","list","patch","update"]
+      - apiGroups: ["batch"]
+        resources: ["jobs"]
+        verbs: ["create","delete","get","list"]
+    image: "litmuschaos/go-runner:3.26.0"
+    args:
+      - -c
+      - ./experiments -name pod-delete
+    command:
+      - /bin/bash
+    env:
+      - name: TOTAL_CHAOS_DURATION
+        value: "15"
+      - name: CHAOS_INTERVAL
+        value: "5"
+      - name: FORCE
+        value: "false"
+      - name: PODS_AFFECTED_PERC
+        value: "100"
+    labels:
+      name: pod-delete
+      app.kubernetes.io/part-of: litmus
