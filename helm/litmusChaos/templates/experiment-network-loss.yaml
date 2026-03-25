@@ -43,7 +43,7 @@ spec:
             runProperties:
               probeTimeout: "10s"
               interval: "3s"
-              attempt: 5
+              attempt: 10
               stopOnFailure: false
 
         components:
