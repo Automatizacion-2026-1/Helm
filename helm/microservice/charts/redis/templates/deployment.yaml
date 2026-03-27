@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
- name: {{ printf "%s-%s" .Release.Name .Chart.Name | quote }}
+  name: {{ printf "%s-%s" .Release.Name .Chart.Name | quote }}
   namespace: {{ .Values.global.namespace }}
 spec:
   replicas: {{ .Values.replicaCount }}
