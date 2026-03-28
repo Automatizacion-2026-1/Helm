@@ -380,10 +380,10 @@ fluent-bit:
       [FILTER]
           Name               record_modifier
           Match              kube.*
-          Record             cluster   CLUSTER_PLACEHOLDER
+          Record             cluster CLUSTER_PLACEHOLDER
           Record             namespace ${kubernetes['namespace_name']}
           Record             container ${kubernetes['container_name']}
-          Record             pod       ${kubernetes['pod_name']}
+          Record             pod ${kubernetes['pod_name']}
     outputs: |
       [OUTPUT]
           Name                    loki
