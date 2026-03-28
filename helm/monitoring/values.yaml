@@ -381,15 +381,11 @@ fluent-bit:
           Name               record_modifier
           Match              kube.*
           Record             cluster CLUSTER_PLACEHOLDER
-          Record             namespace ${kubernetes['namespace_name']}
-          Record             container ${kubernetes['container_name']}
-          Record             pod ${kubernetes['pod_name']}
     outputs: |
       [OUTPUT]
           Name                    loki
           Match                   kube.*
           Host                    monitoring-loki
           Port                    3100
-          labels                  job=fluent-bit
-          label_keys              $cluster,$namespace,$container,$pod  
-          Auto_Kubernetes_Labels  off
+          Labels                  job=fluent-bit, cluster=CLUSTER_PLACEHOLDER
+          Auto_Kubernetes_Labels  on
