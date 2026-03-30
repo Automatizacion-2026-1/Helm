@@ -33,7 +33,7 @@ spec:
           - name: "todos-api-liveness-probe"
             type: "httpProbe"
             httpProbe/inputs:
-              url: "http://microservices-todos-api-svc.{{ .Values.global.targetNamespace }}.svc.cluster.local:8082"
+              url: "http://todos-api-todos-api-svc.microservices.svc.cluster.local:8082"
               insecureSkipVerify: false
               method:
                 get:
@@ -58,7 +58,7 @@ spec:
             - name: DESTINATION_IPS
               value: ""   # empty = all egress (wider blast radius test)
             - name: DESTINATION_HOSTS
-              value: "microservices-redis-svc.{{ .Values.global.targetNamespace }}.svc.cluster.local"
+              value: "redis-redis-svc.{{ .Values.global.targetNamespace }}.svc.cluster.local"
             - name: PODS_AFFECTED_PERC
               value: "100"
 {{- end }}
