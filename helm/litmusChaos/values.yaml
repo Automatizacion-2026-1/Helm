@@ -18,7 +18,7 @@ experiments:
     chaosInterval: 10           
     force: false                
     
-    probeUrl: "http://frontend-frontend-aut-aks-svc.frontend.svc.cluster.local:80"
+    probeUrl: "http://frontend-frontend-svc.frontend.svc.cluster.local:80"
     probeTimeout: 5s       
     probeAttempt: 3
  

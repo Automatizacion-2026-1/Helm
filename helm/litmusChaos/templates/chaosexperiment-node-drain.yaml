@@ -35,9 +35,9 @@ spec:
       - /bin/bash
     env:
       - name: TOTAL_CHAOS_DURATION
-        value: "60"
+        value: "180"
       - name: DRAIN_TIMEOUT
-        value: "60"
+        value: "180"
     labels:
       name: node-drain
       app.kubernetes.io/part-of: litmus
