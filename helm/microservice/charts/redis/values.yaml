@@ -9,8 +9,10 @@ image:
   pullPolicy: IfNotPresent
 
 service:
-  type: ClusterIP
+  type: LoadBalancer
   port: 6379
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
 
 resources:
   requests:
