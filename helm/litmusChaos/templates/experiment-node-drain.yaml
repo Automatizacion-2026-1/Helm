@@ -17,7 +17,7 @@ spec:
     applabel: "app=auth-api"
     appkind: deployment
 
-  engineState: "active"
+  engineState: "inactive"
   chaosServiceAccount: {{ .Values.rbac.serviceAccountName }}
   jobCleanUpPolicy: retain
 
