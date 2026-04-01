@@ -36,11 +36,12 @@ spec:
             promProbe/inputs:
               endpoint: {{ .Values.global.prometheusEndpoint }}
               query: >-
-                min(kube_deployment_status_replicas_ready{
-                  namespace="{{ .Values.global.targetNamespace }}"
-                }) > 0
+                avg_over_time(
+                  sum(kube_deployment_status_replicas_ready{namespace="microservices"})[1m]
+                )
+
               comparator:
-                criteria: "=="
+                criteria: ">"
                 value: "1"
             mode: "Continuous"
             runProperties:
