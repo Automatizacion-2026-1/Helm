@@ -49,3 +49,8 @@ serviceProfile:
     retryRatio: 0.2
     minRetriesPerSecond: 10
     ttl: 10s
+  
+replication:
+  enabled: false
+  masterHost: ""
+  masterPort: 6379
