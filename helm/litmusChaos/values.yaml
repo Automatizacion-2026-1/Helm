@@ -24,9 +24,10 @@ experiments:
  
   nodeDrain:
     enabled: true
-    
+    force: true
     nodeLabel: "kubernetes.azure.com/agentpool=agentpool"
     totalChaosDuration: 120
+    gracePeriod: 0
     
  
   networkLoss:
