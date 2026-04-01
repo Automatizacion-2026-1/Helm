@@ -66,4 +66,6 @@ spec:
               value: "{{ .Values.experiments.nodeDrain.force | default true }}"
             - name: GRACE_PERIOD_SECONDS
               value: "{{ .Values.experiments.nodeDrain.gracePeriod | default 0}}"
+            - name: DISABLE_STATUS_CHECKS
+              value: "true"
 {{- end }}
