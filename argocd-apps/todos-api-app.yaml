@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/Automatizacion-2026-1/helm.git'
-    targetRevision: fix/helm-problems
+    targetRevision: HEAD
     path: helm/microservice/charts/todos-api
   destination:
     server: 'https://kubernetes.default.svc'
