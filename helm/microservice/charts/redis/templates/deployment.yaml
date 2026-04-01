@@ -21,6 +21,13 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - redis-server
+            {{- if .Values.replication.enabled }}
+            - "--replicaof"
+            - "{{ .Values.replication.masterHost }}"
+            - "{{ .Values.replication.masterPort | toString }}"
+            {{- end }}
           ports:
             - containerPort: {{ .Values.service.port }}
           resources:
