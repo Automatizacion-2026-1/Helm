@@ -17,7 +17,7 @@ spec:
     applabel: "app={{ .Values.experiments.networkLoss.appLabel }}"
     appkind: deployment
 
-  engineState: "inactive"
+  engineState: "stop"
   chaosServiceAccount: {{ .Values.rbac.serviceAccountName }}
   jobCleanUpPolicy: retain
 
