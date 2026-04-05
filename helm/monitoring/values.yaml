@@ -331,7 +331,7 @@ loki:
   backend:
     replicas: 0
   gateway:
-    enabled: falseg
+    enabled: false
 
 # ============================================================
 # TEMPO
