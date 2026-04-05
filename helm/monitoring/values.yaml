@@ -240,6 +240,20 @@ grafana:
           url: http://monitoring-loki:3100
           access: proxy
           isDefault: false
+        - name: Tempo
+          type: tempo
+          url: http://monitoring-tempo:3200
+          access: proxy
+          isDefault: false
+          jsonData:
+            httpMethod: GET
+            tracesToLogs:
+              datasourceUid: loki
+              mapTagNameEnabled: true
+            tracesToMetrics:
+              datasourceUid: prometheus
+            serviceMap:
+              datasourceUid: prometheus
 
   dashboardProviders:
     dashboardproviders.yaml:
@@ -317,8 +331,47 @@ loki:
   backend:
     replicas: 0
   gateway:
-    enabled: false
+    enabled: falseg
 
+# ============================================================
+# TEMPO
+# ============================================================
+tempo:
+  tempo:
+    reportingEnabled: false
+    storage:
+      trace:
+        backend: local
+        local:
+          path: /var/tempo/traces
+        wal:
+          path: /var/tempo/wal
+    retention: 24h
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+      zipkin:
+        endpoint: 0.0.0.0:9411
+
+  persistence:
+    enabled: true
+    storageClass: "default"
+    size: 5Gi
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+  service:
+    type: ClusterIP
 # ============================================================
 # FLUENT BIT
 # ============================================================
