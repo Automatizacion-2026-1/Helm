@@ -1,0 +1,19 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: {{ .Values.httpRoute.kind }}
+metadata:
+  name: {{ .Values.httpRoute.metadata.nameArgocd }}
+  namespace: {{ .Values.httpRoute.metadata.namespaceArgocd }}
+spec:
+  parentRefs:
+    - name: {{ .Values.httpRoute.nameParentRefs }}
+      namespace: {{ .Values.httpRoute.gatewayNamespace }}
+  hostnames:
+  - "{{ .Values.httpRoute.hostnameArgocd }}"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: {{ .Values.httpRoute.nameServiceArgocd }}
+          port: {{ .Values.httpRoute.portArgocd }}

@@ -3,15 +3,20 @@ httpRoute:
   metadata:
     name: http-route
     nameGrafana: http-route-grafana
+    nameArgocd: http-route-argocd
     nameLinkerd: http-route-linkerd
     namespace: "frontend"
     namespaceGrafana: "monitoring"
+    namespaceArgocd: "argocd"
     namespacesLinkerd: "linkerd-viz"
   nameParentRefs: "frontend-gateway"
   nameService: "frontend-frontend-svc"
   nameServiceGrafana: "monitoring-grafana"
+  nameServiceArgocd: "argocd-server"
   nameServiceLinkerd: "web"
   portGrafana: 80
+  portArgocd: 80
   port: 80
   portLinkerd: 8084
+  hostnameArgocd: "argo.santiago.monster"
   gatewayNamespace: "gateway-infra" 
