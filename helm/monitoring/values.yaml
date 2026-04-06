@@ -235,11 +235,27 @@ grafana:
           url: http://monitoring-prometheus-server
           access: proxy
           isDefault: true
+          uid: "prometheus-uid"
         - name: Loki
           type: loki
           url: http://monitoring-loki:3100
           access: proxy
           isDefault: false
+          uid: "loki-uid"
+        - name: Tempo
+          type: tempo
+          url: http://monitoring-tempo:3200
+          access: proxy
+          isDefault: false
+          jsonData:
+            httpMethod: GET
+            tracesToLogs:
+              datasourceUid: loki
+              mapTagNameEnabled: true
+            tracesToMetrics:
+              datasourceUid: "prometheus-uid"
+            serviceMap:
+              datasourceUid: "prometheus-uid"
 
   dashboardProviders:
     dashboardproviders.yaml:
@@ -256,14 +272,6 @@ grafana:
 
   dashboards:
     default:
-      kubernetes-cluster:
-        gnetId: 315
-        revision: 3
-        datasource: Prometheus
-      kubernetes-pods:
-        gnetId: 3146
-        revision: 1
-        datasource: Prometheus
       node-exporter:
         gnetId: 1860
         revision: 37
@@ -328,6 +336,87 @@ loki:
     enabled: false
 
 # ============================================================
+# TEMPO
+# ============================================================
+tempo:
+  tempo:
+    reportingEnabled: false
+    storage:
+      trace:
+        backend: local
+        local:
+          path: /var/tempo/traces
+        wal:
+          path: /var/tempo/wal
+    retention: 24h
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+      zipkin:
+        endpoint: 0.0.0.0:9411
+
+  persistence:
+    enabled: true
+    storageClass: "default"
+    size: 5Gi
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+  service:
+    type: ClusterIP
+# ============================================================
+# OPENTELEMETRY COLLECTOR
+# ============================================================
+opentelemetry-collector:
+  mode: deployment
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+  config:
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+
+    processors:
+      batch: {}
+      memory_limiter:
+        check_interval: 1s
+        limit_mib: 100
+
+    exporters:
+      otlp:
+        endpoint: monitoring-tempo:4317
+        tls:
+          insecure: true
+
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [memory_limiter, batch]
+          exporters: [otlp]
+
+# ============================================================
 # FLUENT BIT
 # ============================================================
 fluent-bit:
@@ -359,11 +448,26 @@ fluent-bit:
           Tag               kube.*
           Mem_Buf_Limit     5MB
           Skip_Long_Lines   On 
+      
+      [INPUT]
+          Name tail
+          Path /var/log/containers/*istio-proxy*.log
+          Tag istio.*
+          Parser cri
+
+      [INPUT]
+          Name tail
+          Path /var/log/containers/*app*.log
+          Tag app.*
+          Parser cri
 
     filters: |
       [FILTER]
           Name                kubernetes
           Match               kube.*
+          Kube_URL            https://kubernetes.default.svc:443
+          Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
           Kube_Tag_Prefix     kube.var.log.containers.
           Merge_Log           On
           Keep_Log            Off

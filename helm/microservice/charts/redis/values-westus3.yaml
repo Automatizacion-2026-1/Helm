@@ -1,0 +1,4 @@
+replication:
+  enabled: true
+  masterHost: "10.0.1.7"
+  masterPort: 6379

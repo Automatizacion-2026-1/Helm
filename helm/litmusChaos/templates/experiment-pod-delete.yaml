@@ -18,7 +18,7 @@ spec:
     applabel: "app={{ .Values.experiments.podDelete.appLabel }}"
     appkind: deployment
 
-  engineState: "active"
+  engineState: "stop"
   chaosServiceAccount: {{ .Values.rbac.serviceAccountName }}
 
   jobCleanUpPolicy: retain  

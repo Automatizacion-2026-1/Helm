@@ -4,7 +4,7 @@ global:
   
   litmusNamespace: litmus
   
-  prometheusEndpoint: "http://monitoring-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090"
+  prometheusEndpoint: "http://monitoring-prometheus-server.monitoring.svc.cluster.local"
  
 
 experiments:
@@ -18,15 +18,16 @@ experiments:
     chaosInterval: 10           
     force: false                
     
-    probeUrl: "http://frontend-frontend-aut-aks-svc.frontend.svc.cluster.local:80"
+    probeUrl: "http://frontend-frontend-svc.frontend.svc.cluster.local:80"
     probeTimeout: 5s       
     probeAttempt: 3
  
   nodeDrain:
     enabled: true
-    
+    force: true
     nodeLabel: "kubernetes.azure.com/agentpool=agentpool"
     totalChaosDuration: 120
+    gracePeriod: 0
     
  
   networkLoss:

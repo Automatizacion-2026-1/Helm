@@ -17,7 +17,7 @@ spec:
     applabel: "app=auth-api"
     appkind: deployment
 
-  engineState: "active"
+  engineState: "stop"
   chaosServiceAccount: {{ .Values.rbac.serviceAccountName }}
   jobCleanUpPolicy: retain
 
@@ -36,11 +36,12 @@ spec:
             promProbe/inputs:
               endpoint: {{ .Values.global.prometheusEndpoint }}
               query: >-
-                min(kube_deployment_status_replicas_ready{
-                  namespace="{{ .Values.global.targetNamespace }}"
-                }) > 0
+                avg_over_time(
+                  sum(kube_deployment_status_replicas_ready{namespace="microservices"})[1m]
+                )
+
               comparator:
-                criteria: "=="
+                criteria: ">"
                 value: "1"
             mode: "Continuous"
             runProperties:
@@ -61,4 +62,10 @@ spec:
             # Litmus will kubectl uncordon after the duration
             - name: DRAIN_TIMEOUT
               value: "{{ .Values.experiments.nodeDrain.totalChaosDuration }}"
+            - name: FORCE
+              value: "{{ .Values.experiments.nodeDrain.force | default true }}"
+            - name: GRACE_PERIOD_SECONDS
+              value: "{{ .Values.experiments.nodeDrain.gracePeriod | default 0}}"
+            - name: DISABLE_STATUS_CHECKS
+              value: "true"
 {{- end }}
