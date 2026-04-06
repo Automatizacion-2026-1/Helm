@@ -429,16 +429,12 @@ fluent-bit:
           Keep_Log            Off
           K8S-Logging.Parser  On
           K8S-Logging.Exclude Off
-      
-      [FILTER]
-          Name               record_modifier
-          Match              kube.*
-          Record             cluster CLUSTER_PLACEHOLDER
+
     outputs: |
       [OUTPUT]
           Name                    loki
           Match                   kube.*
           Host                    monitoring-loki
           Port                    3100
-          Labels                  job=fluent-bit, cluster=CLUSTER_PLACEHOLDER
+          Labels                  job=fluent-bit
           Auto_Kubernetes_Labels  on
