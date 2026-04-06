@@ -235,11 +235,13 @@ grafana:
           url: http://monitoring-prometheus-server
           access: proxy
           isDefault: true
+          uid: "prometheus-uid"
         - name: Loki
           type: loki
           url: http://monitoring-loki:3100
           access: proxy
           isDefault: false
+          uid: "loki-uid"
         - name: Tempo
           type: tempo
           url: http://monitoring-tempo:3200
@@ -251,9 +253,9 @@ grafana:
               datasourceUid: loki
               mapTagNameEnabled: true
             tracesToMetrics:
-              datasourceUid: prometheus
+              datasourceUid: "prometheus-uid"
             serviceMap:
-              datasourceUid: prometheus
+              datasourceUid: "prometheus-uid"
 
   dashboardProviders:
     dashboardproviders.yaml:
@@ -372,6 +374,48 @@ tempo:
 
   service:
     type: ClusterIP
+# ============================================================
+# OPENTELEMETRY COLLECTOR
+# ============================================================
+opentelemetry-collector:
+  mode: deployment
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+  config:
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+
+    processors:
+      batch: {}
+      memory_limiter:
+        check_interval: 1s
+        limit_mib: 100
+
+    exporters:
+      otlp:
+        endpoint: monitoring-tempo:4317
+        tls:
+          insecure: true
+
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [memory_limiter, batch]
+          exporters: [otlp]
+
 # ============================================================
 # FLUENT BIT
 # ============================================================
