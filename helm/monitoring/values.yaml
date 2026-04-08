@@ -378,6 +378,12 @@ tempo:
 # OPENTELEMETRY COLLECTOR
 # ============================================================
 opentelemetry-collector:
+
+  image:
+    repository: otel/opentelemetry-collector-contrib
+    tag: "0.147.1"
+    pullPolicy: IfNotPresent
+
   mode: deployment
 
   resources:
