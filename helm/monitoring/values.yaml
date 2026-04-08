@@ -247,10 +247,11 @@ grafana:
           url: http://monitoring-tempo:3200
           access: proxy
           isDefault: false
+          uid: "tempo-uid"
           jsonData:
             httpMethod: GET
             tracesToLogs:
-              datasourceUid: loki
+              datasourceUid: "loki-uid"
               mapTagNameEnabled: true
             tracesToMetrics:
               datasourceUid: "prometheus-uid"
